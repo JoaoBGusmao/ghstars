@@ -1,0 +1,23 @@
+{
+  "name": "ghstars",
+  "version": "1.0.0",
+  "description": "Aplicação que mostra os repositórios em que o usuário deu estrela",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoaoBGusmao/ghstars.git"
+  },
+  "author": "João Gusmão",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoaoBGusmao/ghstars/issues"
+  },
+  "homepage": "https://github.com/JoaoBGusmao/ghstars#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0"
+  }
+}
