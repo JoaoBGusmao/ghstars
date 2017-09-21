@@ -3,11 +3,54 @@
  */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
 body {
+  font-family: "Open Sans";
   margin: 0;
   padding: 0;
-  font-family: "Open Sans"; }
+  background: #F5F5F5; }
+
+p {
+  margin: 0; }
 
 .container {
-  max-width: 1140px;
   margin: 0 auto;
+  max-width: 1140px;
   padding: 20px; }
+
+header.header .test p {
+  color: white;
+  background: #ffc200;
+  margin: 0;
+  padding: 4px;
+  text-align: center;
+  text-transform: uppercase; }
+
+header.header h1 {
+  border-bottom: 1px solid #E0E0E0;
+  color: #757575;
+  font-size: 16px;
+  padding-bottom: 25px;
+  text-align: center;
+  width: 100%; }
+
+.card-repo {
+  background: white;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.12); }
+  .card-repo .header {
+    background: #ffc200;
+    color: white;
+    font-weight: bold;
+    padding: 15px;
+    position: relative; }
+    .card-repo .header .image {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      width: 52px; }
+      .card-repo .header .image img {
+        width: 100%;
+        height: auto; }
+  .card-repo .content {
+    padding: 15px; }
+    .card-repo .content p {
+      font-size: 14px;
+      line-height: 20px; }
