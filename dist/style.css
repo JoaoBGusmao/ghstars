@@ -1,7 +1,6 @@
-/*
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);/*
  * This file is used to import all css files, so sass can compile everything
  */
-@import url("https://fonts.googleapis.com/css?family=Open+Sans");
 body {
   font-family: "Open Sans";
   margin: 0;
