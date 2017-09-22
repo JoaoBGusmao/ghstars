@@ -1,29 +1,25 @@
-import apiWorker from './apiWorker'
-import $ from 'jquery'
+import apiWorker from './api-worker'
+import RepoCard from './repo-card'
 
 import '../css/style.scss'
 
-window.$ = $
+let cards = null;
 
-const registerHandlers = () => {
+const init = () => {
+	const user   = 'wilfernandesjr';
 	const worker = new apiWorker();
-	return (
-		worker.createCall()
-			.api( 'http:///asssasd' )
-			.toRoute( '/' )
-			.whenDone( dataReceived )
-			.make()
-		// console.log( document.querySelector( '.card-repo' ).innerHTML )
-		//document.querySelector('body').addEventListener('click', () => didClicked())
-	)
+	cards = new RepoCard();
+
+	cards.startLoading();
+
+	worker.api( 'https://api.github.com' )
+		  .toRoute( `users/${user}/starred` )
+		  .whenDone( dataReceived )
+		  .make()
 }
 
-const dataReceived = (data) => {
-	console.log( data )
+const dataReceived = ( data ) => {
+	cards.showCards( data );
 }
 
-const didClicked = () => {
-
-}
-
-registerHandlers()
+init()

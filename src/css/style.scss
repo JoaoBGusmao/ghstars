@@ -1,8 +1,8 @@
 /*
  * This file is used to import all css files, so sass can compile everything
  */
-@import '~./base/_fonts.scss';
-@import '~./base/_structure.scss';
+@import 'base/fonts';
+@import 'base/structure';
 
-@import '~./components/_header.scss';
-@import '~./components/card/_card.scss';
+@import 'components/header';
+@import 'components/card/card';

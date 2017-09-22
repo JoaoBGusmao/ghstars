@@ -1,9 +1,8 @@
 class ApiWorker{
-	constructor( url ) {
+	constructor() {
 		this.baseUrl = '';
 		this.route = '';
 		this.cb = () => {};
-		console.log(url);
 	}
 
 	createCall() {
@@ -20,6 +19,10 @@ class ApiWorker{
 		return this;
 	}
 
+	getApiUrl() {
+		return `${this.baseUrl}/${this.route}`;
+	}
+
 	make() {
 		if( ! this.checkForFields() )
 			return;
@@ -31,7 +34,7 @@ class ApiWorker{
 				classContext.complete( this.responseText, classContext.cb );
 			}
 		};
-		xhttp.open("GET", "https://api.github.com/", true);
+		xhttp.open( 'GET', this.getApiUrl() , true );
 		xhttp.send();
 	}
 
@@ -43,11 +46,11 @@ class ApiWorker{
 	checkForFields() {
 		try {
 			if( this.baseUrl == '' )
-				throw "baseUrl não foi fornecido para a chamada";
+				throw 'baseUrl não foi fornecido para a chamada';
 			if( this.route == '' )
-				throw "route não foi fornecido para a chamada";
+				throw 'route não foi fornecido para a chamada';
 		} catch( e ) {
-			console.log( "ApiWorker Error: " + e );
+			console.log( 'ApiWorker Error: ' + e );
 			return false;
 		}
 		return true;

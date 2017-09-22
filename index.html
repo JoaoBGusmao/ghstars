@@ -9,6 +9,9 @@
 
 	<body>
 		<div class='wrapper'>
+			<div class="loading">
+				<div class="loader"></div>
+			</div>
 			<header class='header'>
 				<div class="test">
 					<p>Teste Escale</p>
@@ -21,14 +24,14 @@
 				<div class="repo-list">
 					<div class="card-repo">
 						<div class="header">
-							<p>NOME</p>
+							<p>{name}</p>
 							<div class="image">
-								<img src="//github.com/joaobgusmao.png" />
+								<img data-src="{image}" />
 							</div>
 						</div>
 
 						<div class="content">
-							<p>High performance and SEO friendly lazy loader for images (responsive and normal), iframes and more, that detects any visibility changes triggered through user interaction, CSS or JavaScript without configuration.</p>
+							<p>{desc}</p>
 						</div>
 					</div>
 				</div>
