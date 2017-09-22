@@ -56,6 +56,7 @@ class RepoCard {
 		var res = render;
 		res = res.replace( '{name}', item.name );
 		res = res.replace( '{html_url}', item.html_url );
+		res = res.replace( '{stargazers_count}', item.stargazers_count );
 		res = res.replace( '{description}', item.description );
 
 		return res;

@@ -105,6 +105,21 @@ header.header h1 {
     .card-repo .header a {
       color: white;
       text-decoration: none; }
+    .card-repo .header .star {
+      float: right;
+      width: 30px;
+      position: relative;
+      margin-top: -5px; }
+      .card-repo .header .star span {
+        position: absolute;
+        text-align: right;
+        top: 6px;
+        right: 38px;
+        font-size: 14px; }
+      .card-repo .header .star svg {
+        width: 100%;
+        height: auto;
+        fill: #FFF; }
     .card-repo .header .image {
       position: absolute;
       top: 0px;
