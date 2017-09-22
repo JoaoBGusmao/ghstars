@@ -9,14 +9,15 @@
 	}
 
 	.header {
-		background: #ffc200;
+		border-top: 2px solid rgba(0,0,0,0.4);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 		color: white;
 		font-weight: bold;
 		padding: 15px;
 		position: relative;
 
 		a {
-			color: white;
+			color: #444;
 			text-decoration: none;
 		}
 
@@ -24,7 +25,7 @@
 			float: right;
 			width: 30px;
 			position: relative;
-			margin-top: -5px;
+			margin-top: -4px;
 
 			span {
 				position: absolute;
@@ -32,12 +33,13 @@
 				top: 6px;
 				right: 38px;
 				font-size: 14px;
+				color: #9a9a9a;
 			}
 
 			svg {
 				width: 100%;
 				height: auto;
-				fill: #FFF;
+				fill: #ffc200
 			}
 		}
 
@@ -58,6 +60,7 @@
 		padding: 15px;
 
 		p {
+			color: #808080;
 			font-size: 14px;
 			line-height: 20px;
 		}

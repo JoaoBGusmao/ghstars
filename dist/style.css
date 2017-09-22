@@ -97,29 +97,31 @@ header.header h1 {
   .card-repo.active {
     display: block; }
   .card-repo .header {
-    background: #ffc200;
+    border-top: 2px solid rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     color: white;
     font-weight: bold;
     padding: 15px;
     position: relative; }
     .card-repo .header a {
-      color: white;
+      color: #444;
       text-decoration: none; }
     .card-repo .header .star {
       float: right;
       width: 30px;
       position: relative;
-      margin-top: -5px; }
+      margin-top: -4px; }
       .card-repo .header .star span {
         position: absolute;
         text-align: right;
         top: 6px;
         right: 38px;
-        font-size: 14px; }
+        font-size: 14px;
+        color: #9a9a9a; }
       .card-repo .header .star svg {
         width: 100%;
         height: auto;
-        fill: #FFF; }
+        fill: #ffc200; }
     .card-repo .header .image {
       position: absolute;
       top: 0px;
@@ -131,5 +133,6 @@ header.header h1 {
   .card-repo .content {
     padding: 15px; }
     .card-repo .content p {
+      color: #808080;
       font-size: 14px;
       line-height: 20px; }
