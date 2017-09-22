@@ -2,6 +2,11 @@
 	display: none;
 	background: white;
 	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.12);
+	margin-bottom: 20px;
+	
+	&.active {
+		display: block;
+	}
 
 	.header {
 		background: #ffc200;
@@ -9,6 +14,11 @@
 		font-weight: bold;
 		padding: 15px;
 		position: relative;
+
+		a {
+			color: white;
+			text-decoration: none;
+		}
 
 		.image {
 			position: absolute;

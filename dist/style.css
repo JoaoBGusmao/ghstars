@@ -92,13 +92,19 @@ header.header h1 {
 .card-repo {
   display: none;
   background: white;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.12); }
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.12);
+  margin-bottom: 20px; }
+  .card-repo.active {
+    display: block; }
   .card-repo .header {
     background: #ffc200;
     color: white;
     font-weight: bold;
     padding: 15px;
     position: relative; }
+    .card-repo .header a {
+      color: white;
+      text-decoration: none; }
     .card-repo .header .image {
       position: absolute;
       top: 0px;

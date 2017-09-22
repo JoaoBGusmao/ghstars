@@ -264,6 +264,7 @@ var RepoCard = function () {
 			var temp = document.createElement('div');
 			temp.innerHTML = render;
 			var htmlObject = temp.firstChild;
+			htmlObject.classList.add('active');
 
 			document.querySelector('.repo-list').appendChild(htmlObject);
 		}
@@ -272,6 +273,8 @@ var RepoCard = function () {
 		value: function prepareToRender(render, item) {
 			var res = render;
 			res = res.replace('{name}', item.name);
+			res = res.replace('{html_url}', item.html_url);
+			res = res.replace('{description}', item.description);
 
 			return res;
 		}
