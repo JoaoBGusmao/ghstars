@@ -214,7 +214,7 @@ var RepoCard = function () {
 
 		this.state = {
 			loading: false,
-			test: 'sss'
+			filter: 'JavaScript'
 		};
 
 		this.template = null;
@@ -242,11 +242,13 @@ var RepoCard = function () {
 			var _this = this;
 
 			var ghStars = JSON.parse(response);
-			// var ordered = ghStars.sort( ( a, b ) => (
-			// 	parseInt( a.stargazers_count ) < parseInt( b.stargazers_count )
-			// ))
+
+			ghStars.sort(function (a, b) {
+				return _this.sortStarsDescending(a, b);
+			});
+
 			ghStars.map(function (item, index) {
-				_this.renderCard(item);
+				if (_this.fitInFilter(item)) _this.renderCard(item);
 			});
 
 			this.stopLoading();
@@ -272,12 +274,27 @@ var RepoCard = function () {
 		key: 'prepareToRender',
 		value: function prepareToRender(render, item) {
 			var res = render;
+
 			res = res.replace('{name}', item.name);
 			res = res.replace('{html_url}', item.html_url);
 			res = res.replace('{stargazers_count}', item.stargazers_count.toLocaleString());
-			res = res.replace('{description}', item.description);
+			res = res.replace('{description}', item.description || 'Sem descrição');
+			res = res.replace('{owner.login}', item.owner.login);
+			res = res.replace('{open_issues_count}', item.open_issues_count);
+			res = res.replace('{created_at}', item.created_at);
+			res = res.replace('{updated_at}', item.updated_at);
+			res = res.replace('{language}', item.language);
+
+			res = this.fixImageSrc(res);
 
 			return res;
+		}
+	}, {
+		key: 'fitInFilter',
+		value: function fitInFilter(item) {
+			var fit = item.language === this.state.filter;
+
+			return fit;
 		}
 	}, {
 		key: 'getTemplate',
@@ -288,9 +305,43 @@ var RepoCard = function () {
 			return tpl;
 		}
 	}, {
+		key: 'fixImageSrc',
+		value: function fixImageSrc(res) {
+			var fixed = res.replace('data-img-src', 'src');
+
+			return fixed;
+		}
+	}, {
 		key: 'setState',
 		value: function setState(state) {
 			this.state = state;
+		}
+	}, {
+		key: 'sortStarsDescending',
+		value: function sortStarsDescending(a, b) {
+			return parseInt(b.stargazers_count) - parseInt(a.stargazers_count);
+		}
+	}, {
+		key: 'sortStarsAscending',
+		value: function sortStarsAscending(a, b) {
+			return parseInt(a.stargazers_count) - parseInt(b.stargazers_count);
+		}
+	}, {
+		key: 'sortIssuesDescending',
+		value: function sortIssuesDescending(a, b) {
+			return parseInt(b.open_issues_count) - parseInt(a.open_issues_count);
+		}
+	}, {
+		key: 'sortIssuesAscending',
+		value: function sortIssuesAscending(a, b) {
+			return parseInt(a.open_issues_count) - parseInt(b.open_issues_count);
+		}
+	}, {
+		key: 'sortName',
+		value: function sortName(a, b) {
+			if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+			if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+			return 0;
 		}
 	}]);
 

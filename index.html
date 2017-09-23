@@ -9,39 +9,42 @@
 
 	<body>
 		<div class='wrapper'>
-			<div class="loading">
-				<div class="loader"></div>
+			<div class='loading'>
+				<div class='loader'></div>
 			</div>
 			<header class='header'>
-				<div class="test">
+				<div class='test'>
 					<p>Teste Escale</p>
 				</div>
-				<div class="container">
+				<div class='container'>
 					<h1>Lista de Repositórios com star do usuário wilfernandesjr</h1>
 				</div>
 			</header>
 			<div class='container'>
-				<div class="repo-list">
-					<div class="card-repo">
-						<div class="header">
-							<a href="{html_url}">{name}</a>
+				<div class='repo-list'>
+					<div class='card-repo'>
+						<div class='header'>
+							<a href='{html_url}'>{name}</a>
 
-							<div class="star">
+							<div class='star'>
 								<span>{stargazers_count}</span>
-								<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+								<svg version='1.1' xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'>
 									<g>
-										<path d="M512 198.525l-176.89-25.704-79.11-160.291-79.108 160.291-176.892 25.704 128 124.769-30.216 176.176 158.216-83.179 158.216 83.179-30.217-176.176 128.001-124.769z"></path>
+										<path d='M512 198.525l-176.89-25.704-79.11-160.291-79.108 160.291-176.892 25.704 128 124.769-30.216 176.176 158.216-83.179 158.216 83.179-30.217-176.176 128.001-124.769z'></path>
 									</g>
 								</svg>
 							</div>
-
-							<div class="image">
-								<img data-src="{image}" />
-							</div>
 						</div>
 
-						<div class="content">
-							<p>{description}</p>
+						<div class='content'>
+							<img class='image' data-img-src='https://github.com/{owner.login}.png?size=70' />
+							<p class='description'>{description}</p>
+							<div class='aditional-info'>
+								<p><strong>Issues Abertos: </strong>{open_issues_count}</p>
+								<p><strong>Criado em: </strong>{created_at}</p>
+								<p><strong>Atualizado em: </strong>{updated_at}</p>
+							</div>
+							<p class='language'>{language}</p>
 						</div>
 					</div>
 				</div>

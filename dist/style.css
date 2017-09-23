@@ -105,12 +105,15 @@ header.header h1 {
     position: relative; }
     .card-repo .header a {
       color: #444;
-      text-decoration: none; }
+      display: inline-block;
+      text-decoration: none;
+      max-width: 60%;
+      word-break: break-word; }
     .card-repo .header .star {
       float: right;
-      width: 30px;
+      margin-top: -4px;
       position: relative;
-      margin-top: -4px; }
+      width: 30px; }
       .card-repo .header .star span {
         position: absolute;
         text-align: right;
@@ -122,17 +125,28 @@ header.header h1 {
         width: 100%;
         height: auto;
         fill: #ffc200; }
-    .card-repo .header .image {
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      width: 52px; }
-      .card-repo .header .image img {
-        width: 100%;
-        height: auto; }
   .card-repo .content {
     padding: 15px; }
-    .card-repo .content p {
+    .card-repo .content .image {
+      float: left;
+      padding-bottom: 0px;
+      padding-right: 15px;
+      width: 70px; }
+    .card-repo .content p.description {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       color: #808080;
       font-size: 14px;
-      line-height: 20px; }
+      line-height: 20px;
+      min-height: 75px;
+      padding-bottom: 10px; }
+    .card-repo .content .aditional-info p {
+      color: #808080;
+      font-size: 13px;
+      margin: 10px 0; }
+    .card-repo .content p.language {
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      color: #808080;
+      font-size: 13px;
+      margin-top: 15px;
+      padding-top: 10px;
+      text-align: center; }

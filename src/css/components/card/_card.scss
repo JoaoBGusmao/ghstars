@@ -18,14 +18,17 @@
 
 		a {
 			color: #444;
+			display: inline-block;
 			text-decoration: none;
+			max-width: 60%;
+			word-break: break-word;
 		}
 
 		.star {
 			float: right;
-			width: 30px;
-			position: relative;
 			margin-top: -4px;
+			position: relative;
+			width: 30px;
 
 			span {
 				position: absolute;
@@ -42,27 +45,42 @@
 				fill: #ffc200
 			}
 		}
-
-		.image {
-			position: absolute;
-			top: 0px;
-			right: 0px;
-			width: 52px;
-			
-			img {
-				width: 100%;
-				height: auto;
-			}
-		}
 	}
 
 	.content {
 		padding: 15px;
 
-		p {
+		.image {
+			float: left;
+			padding-bottom: 0px;
+			padding-right: 15px;
+			width: 70px;
+		}
+
+		p.description {
+			border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 			color: #808080;
 			font-size: 14px;
 			line-height: 20px;
+			min-height: 75px;
+			padding-bottom: 10px;
+		}
+
+		.aditional-info {
+			p {
+				color: #808080;
+				font-size: 13px;
+				margin: 10px 0;
+			}
+		}
+
+		p.language {
+			border-top: 1px solid rgba(0, 0, 0, 0.05);
+			color: #808080;
+			font-size: 13px;
+			margin-top: 15px;
+			padding-top: 10px;
+			text-align: center;
 		}
 	}
 }
