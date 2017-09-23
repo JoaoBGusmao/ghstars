@@ -85,6 +85,15 @@ p {
 	}
 }
 
+.main-content {
+	opacity: 1;
+	transition: opacity 0.5s;
+
+	&.has-error {
+		opacity: .3;
+	}
+}
+
 footer p {
 	border-top: 1px solid rgba(0, 0, 0, 0.05);
 	color: #808080;

@@ -82,7 +82,7 @@ var _repoCard = __webpack_require__(2);
 
 var _repoCard2 = _interopRequireDefault(_repoCard);
 
-__webpack_require__(3);
+__webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -163,7 +163,7 @@ var App = function () {
 
 			this.setState(_extends({}, this.state, {
 				ghuser: newGhUser,
-				'filter': 'Todas as Linguagens'
+				filter: 'Todas as Linguagens'
 			}));
 
 			this.cards.clearCards();
@@ -173,10 +173,11 @@ var App = function () {
 	}, {
 		key: 'makeGHCall',
 		value: function makeGHCall() {
+			this.hideErrors();
 			if (this.cards.data != null) {
 				return this.dataReceived();
 			}
-			this.api.api('https://api.github.com').toRoute('users/' + this.state.ghuser + '/starred').whenDone(this.dataReceived.bind(this)).make();
+			this.api.api('https://api.github.com').toRoute('users/' + this.state.ghuser + '/starred').whenDone(this.dataReceived.bind(this)).throw(this.apiError.bind(this)).make();
 		}
 	}, {
 		key: 'dataReceived',
@@ -185,6 +186,21 @@ var App = function () {
 				this.cards.setData(data);
 			}
 			this.cards.showCards();
+		}
+	}, {
+		key: 'apiError',
+		value: function apiError(status) {
+			var error = "Ocorreu um erro desconhecido ao solicitar a API do Github";
+
+			if (status == 403) {
+				error = "Você não tem permissão para acessar a API";
+			}
+
+			if (status == 404) {
+				error = "O usuário não foi encontrado";
+			}
+			this.stopLoading();
+			this.showError(error);
 		}
 	}, {
 		key: 'setState',
@@ -206,6 +222,22 @@ var App = function () {
 				loading: false
 			}));
 			document.querySelector('.loading').classList.remove('active');
+		}
+	}, {
+		key: 'showError',
+		value: function showError(error) {
+			var errorWrapper = document.getElementById('error-wrapper');
+			errorWrapper.classList.add('active');
+			errorWrapper.innerHTML = error;
+			document.querySelector('.main-content').classList.add('has-error');
+		}
+	}, {
+		key: 'hideErrors',
+		value: function hideErrors() {
+			var errorWrapper = document.getElementById('error-wrapper');
+			errorWrapper.classList.remove('active');
+			errorWrapper.innerHTML = '';
+			document.querySelector('.main-content').classList.remove('has-error');
 		}
 	}]);
 
@@ -269,7 +301,10 @@ var ApiWorker = function () {
 			var classContext = this;
 			xhttp.onreadystatechange = function () {
 				if (this.readyState == 4 && this.status == 200) {
-					classContext.complete(this.responseText, classContext.cb);
+					return classContext.complete(this.responseText, classContext.cb);
+				}
+				if (this.readyState == 4) {
+					return classContext.throwComplete(this.status, classContext.errorCb);
 				}
 			};
 			xhttp.open('GET', this.getApiUrl(), true);
@@ -280,6 +315,17 @@ var ApiWorker = function () {
 		value: function whenDone(cb) {
 			this.cb = cb;
 			return this;
+		}
+	}, {
+		key: 'throw',
+		value: function _throw(cb) {
+			this.errorCb = cb;
+			return this;
+		}
+	}, {
+		key: 'throwComplete',
+		value: function throwComplete(status, cb) {
+			return cb(status);
 		}
 	}, {
 		key: 'checkForFields',
@@ -318,7 +364,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _templating = __webpack_require__(5);
+var _templating = __webpack_require__(3);
 
 var _templating2 = _interopRequireDefault(_templating);
 
@@ -500,13 +546,6 @@ exports.default = RepoCard;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 4 */,
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -586,6 +625,12 @@ var Templating = function () {
 }();
 
 exports.default = Templating;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

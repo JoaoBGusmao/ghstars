@@ -73,6 +73,12 @@ p {
     box-shadow: 0 -2em;
     height: 5em; } }
 
+.main-content {
+  opacity: 1;
+  transition: opacity 0.5s; }
+  .main-content.has-error {
+    opacity: .3; }
+
 footer p {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   color: #808080;
@@ -124,6 +130,19 @@ header.header .ghuser {
   header.header .ghuser a {
     font-size: 13px;
     color: #808080; }
+
+header.header #error-wrapper {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  display: none;
+  font-size: 13px;
+  text-align: center;
+  padding: 13px;
+  border-radius: 5px;
+  margin-top: 20px; }
+  header.header #error-wrapper.active {
+    display: block; }
 
 header.header .new-ghuser {
   margin-top: 0;

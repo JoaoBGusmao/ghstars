@@ -31,7 +31,10 @@ class ApiWorker{
 		var classContext = this;
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				classContext.complete( this.responseText, classContext.cb );
+				return classContext.complete( this.responseText, classContext.cb );
+			}
+			if( this.readyState == 4 ) {
+				return classContext.throwComplete( this.status, classContext.errorCb )
 			}
 		};
 		xhttp.open( 'GET', this.getApiUrl() , true );
@@ -41,6 +44,15 @@ class ApiWorker{
 	whenDone( cb ) {
 		this.cb = cb;
 		return this;
+	}
+
+	throw( cb ) {
+		this.errorCb = cb;
+		return this;
+	}
+
+	throwComplete( status, cb ) {
+		return cb( status );
 	}
 
 	checkForFields() {
@@ -57,7 +69,7 @@ class ApiWorker{
 	}
 
 	complete( data, cb ) {
-		return cb(data);
+		return cb( data );
 	}
 }
 

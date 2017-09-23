@@ -71,7 +71,7 @@ class App {
 		this.setState({
 			...this.state,
 			ghuser: newGhUser,
-			'filter': 'Todas as Linguagens'
+			filter: 'Todas as Linguagens'
 		});
 
 		this.cards.clearCards();
@@ -80,12 +80,14 @@ class App {
 	}
 
 	makeGHCall() {
+		this.hideErrors();
 		if( this.cards.data != null ) {
 			return this.dataReceived();
 		}
 		this.api.api( 'https://api.github.com' )
 			  .toRoute( `users/${this.state.ghuser}/starred` )
 			  .whenDone( this.dataReceived.bind( this ) )
+			  .throw( this.apiError.bind(this) )
 			  .make()
 	}
 
@@ -94,6 +96,20 @@ class App {
 			this.cards.setData( data );
 		}
 		this.cards.showCards()
+	}
+
+	apiError( status ) {
+		var error = "Ocorreu um erro desconhecido ao solicitar a API do Github";
+		
+		if( status == 403 ) {
+			error = "Você não tem permissão para acessar a API";
+		}
+
+		if( status == 404 ) {
+			error = "O usuário não foi encontrado";
+		}
+		this.stopLoading();
+		this.showError( error );
 	}
 
 	setState( state ) {
@@ -114,6 +130,20 @@ class App {
 			loading: false
 		});
 		document.querySelector( '.loading' ).classList.remove( 'active' );
+	}
+
+	showError( error ) {
+		var errorWrapper = document.getElementById( 'error-wrapper' );
+		errorWrapper.classList.add( 'active' );
+		errorWrapper.innerHTML = error;
+		document.querySelector( '.main-content' ).classList.add( 'has-error' )
+	}
+
+	hideErrors() {
+		var errorWrapper = document.getElementById( 'error-wrapper' );
+		errorWrapper.classList.remove( 'active' );
+		errorWrapper.innerHTML = '';
+		document.querySelector( '.main-content' ).classList.remove( 'has-error' );
 	}
 }
 
