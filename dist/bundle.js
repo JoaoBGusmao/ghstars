@@ -70,6 +70,8 @@
 "use strict";
 
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _apiWorker = __webpack_require__(1);
@@ -95,30 +97,86 @@ var App = function () {
 
 		this.state = {
 			loading: false,
-			filter: 'JavaScript',
+			filter: '',
 			ghuser: 'wilfernandesjr',
 			sort: 'sortStarsDescending'
 		};
 
-		this.cards.startLoading();
-
-		this.makeGHCall();
+		this.reloadCards(true);
+		this.addEventListeners();
 	}
 
 	_createClass(App, [{
+		key: 'reloadCards',
+		value: function reloadCards(callApiAgain) {
+			if (callApiAgain) {
+				this.cards.data = null;
+			}
+
+			this.startLoading();
+			this.makeGHCall();
+		}
+	}, {
+		key: 'addEventListeners',
+		value: function addEventListeners() {
+			document.querySelector('.order-select').addEventListener('change', this.orderChanged.bind(this));
+			document.querySelector('.filter-select').addEventListener('change', this.filterChanged.bind(this));
+		}
+	}, {
+		key: 'orderChanged',
+		value: function orderChanged(e) {
+			this.setState(_extends({}, this.state, {
+				sort: e.target.value
+			}));
+
+			this.reloadCards(false);
+		}
+	}, {
+		key: 'filterChanged',
+		value: function filterChanged(e) {
+			this.setState(_extends({}, this.state, {
+				filter: e.target.value
+			}));
+
+			this.cards.validateFilter();
+			this.reloadCards(false);
+		}
+	}, {
 		key: 'makeGHCall',
 		value: function makeGHCall() {
+			if (this.cards.data != null) {
+				return this.dataReceived();
+			}
 			this.api.api('https://api.github.com').toRoute('users/' + this.state.ghuser + '/starred').whenDone(this.dataReceived.bind(this)).make();
 		}
 	}, {
 		key: 'dataReceived',
 		value: function dataReceived(data) {
-			this.cards.showCards(data);
+			if (this.cards.data == null) {
+				this.cards.setData(data);
+			}
+			this.cards.showCards();
 		}
 	}, {
 		key: 'setState',
 		value: function setState(state) {
 			this.state = state;
+		}
+	}, {
+		key: 'startLoading',
+		value: function startLoading() {
+			this.setState(_extends({}, this.state, {
+				loading: true
+			}));
+			document.querySelector('.loading').classList.add('active');
+		}
+	}, {
+		key: 'stopLoading',
+		value: function stopLoading() {
+			this.setState(_extends({}, this.state, {
+				loading: false
+			}));
+			document.querySelector('.loading').classList.remove('active');
 		}
 	}]);
 
@@ -229,8 +287,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _templating = __webpack_require__(5);
@@ -246,41 +302,57 @@ var RepoCard = function () {
 		_classCallCheck(this, RepoCard);
 
 		this.app = app;
+		this.data = null;
 		this.template = new _templating2.default();
+		this.filters = [];
 	}
 
 	_createClass(RepoCard, [{
-		key: 'startLoading',
-		value: function startLoading() {
-			this.app.setState(_extends({}, this.app.state, {
-				loading: true
-			}));
-			document.querySelector('.loading').classList.add('active');
-		}
-	}, {
-		key: 'stopLoading',
-		value: function stopLoading() {
-			this.app.setState(_extends({}, this.app.state, {
-				loading: false
-			}));
-			document.querySelector('.loading').classList.remove('active');
-		}
-	}, {
 		key: 'showCards',
-		value: function showCards(response, done) {
+		value: function showCards() {
 			var _this = this;
 
-			var ghStars = JSON.parse(response);
+			if (this.template.getTemplate() != null) {
+				this.clearResults();
+			}
+
+			var ghStars = JSON.parse(this.data);
+
+			this.loadLanguagesFilter(ghStars);
 
 			ghStars.sort(function (a, b) {
-				return _this.sortStarsDescending(a, b);
+				return _this.sortCards(a, b);
 			});
 
 			ghStars.map(function (item, index) {
 				if (_this.fitInFilter(item)) _this.renderCard(item);
 			});
 
-			this.stopLoading();
+			this.app.stopLoading();
+		}
+	}, {
+		key: 'sortCards',
+		value: function sortCards(a, b) {
+			var sort = this.app.state.sort;
+
+			if (sort == 'sortName') return this.sortName(a, b);
+
+			if (sort == 'sortStarsDescending') return this.sortStarsDescending(a, b);
+
+			if (sort == 'sortStarsAscending') return this.sortStarsAscending(a, b);
+
+			if (sort == 'sortIssuesDescending') return this.sortIssuesDescending(a, b);
+
+			if (sort == 'sortIssuesAscending') return this.sortIssuesAscending(a, b);
+
+			return this.sortStarsDescending(a, b);
+		}
+	}, {
+		key: 'validateFilter',
+		value: function validateFilter() {
+			if (this.filters.indexOf(this.app.state.filter) == -1) {
+				this.app.state.filter = '';
+			}
 		}
 	}, {
 		key: 'renderCard',
@@ -298,9 +370,14 @@ var RepoCard = function () {
 			this.template.appendHTML('.repo-list', render);
 		}
 	}, {
+		key: 'clearResults',
+		value: function clearResults() {
+			document.querySelector('.repo-list').innerHTML = '';
+		}
+	}, {
 		key: 'fitInFilter',
 		value: function fitInFilter(item) {
-			var fit = item.language === this.app.state.filter;
+			var fit = item.language === this.app.state.filter || this.app.state.filter === '';
 
 			return fit;
 		}
@@ -337,6 +414,40 @@ var RepoCard = function () {
 			if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
 			if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
 			return 0;
+		}
+	}, {
+		key: 'loadLanguagesFilter',
+		value: function loadLanguagesFilter(repos) {
+			var _this2 = this;
+
+			if (repos != null) {
+				repos.forEach(function (item) {
+					if (item.language != null && _this2.filters.indexOf(item.language) == -1) {
+						_this2.filters.push(item.language);
+					}
+				});
+
+				this.filters.sort();
+
+				this.putFiltersToSelect();
+			}
+		}
+	}, {
+		key: 'putFiltersToSelect',
+		value: function putFiltersToSelect() {
+
+			this.filters.forEach(function (item) {
+				var temp = document.createElement('div');
+				temp.innerHTML = '<option value="' + item + '">' + item + '</option>';
+				var htmlObject = temp.firstChild;
+
+				document.querySelector('.filter-select').appendChild(htmlObject);
+			});
+		}
+	}, {
+		key: 'setData',
+		value: function setData(data) {
+			this.data = data;
 		}
 	}]);
 

@@ -3,36 +3,55 @@ import Templating from './templating'
 class RepoCard {
 	constructor( app ) {
 		this.app      = app;
+		this.data     = null;
 		this.template = new Templating();
+		this.filters  = [];
 	}
 
-	startLoading() {
-		this.app.setState({
-			...this.app.state,
-			loading: true
-		});
-		document.querySelector( '.loading' ).classList.add( 'active' );
-	}
+	showCards() {
+		if( this.template.getTemplate() != null ) {
+			this.clearResults();
+		}
 
-	stopLoading() {
-		this.app.setState({
-			...this.app.state,
-			loading: false
-		});
-		document.querySelector( '.loading' ).classList.remove( 'active' );
-	}
+		var ghStars = JSON.parse( this.data );
 
-	showCards( response, done ) {
-		var ghStars = JSON.parse( response );
+		this.loadLanguagesFilter( ghStars );
 
-		ghStars.sort( ( a, b ) => this.sortStarsDescending( a, b ) );
+		ghStars.sort( ( a, b ) => this.sortCards( a, b ) );
 
 		ghStars.map( ( item, index ) => {
 			if( this.fitInFilter( item ) )
 				this.renderCard( item );
 		})
 
-		this.stopLoading();
+		this.app.stopLoading();
+	}
+
+	sortCards( a, b ) {
+		var sort = this.app.state.sort;
+		
+		if( sort == 'sortName' )
+			return this.sortName( a, b );
+
+		if( sort == 'sortStarsDescending' )
+			return this.sortStarsDescending( a, b );
+
+		if( sort == 'sortStarsAscending' )
+			return this.sortStarsAscending( a, b );
+
+		if( sort == 'sortIssuesDescending' )
+			return this.sortIssuesDescending( a, b );
+
+		if( sort == 'sortIssuesAscending' )
+			return this.sortIssuesAscending( a, b );
+
+		return this.sortStarsDescending( a, b );
+	}
+
+	validateFilter() {
+		if( this.filters.indexOf( this.app.state.filter ) == -1 ) {
+			this.app.state.filter = '';
+		}
 	}
 
 	renderCard( item ) {
@@ -59,8 +78,12 @@ class RepoCard {
 		this.template.appendHTML( '.repo-list', render );
 	}
 
+	clearResults() {
+		document.querySelector( '.repo-list' ).innerHTML = '';
+	}
+
 	fitInFilter( item ) {
-		var fit = item.language === this.app.state.filter;
+		var fit = item.language === this.app.state.filter || this.app.state.filter === '';
 
 		return fit;
 	}
@@ -91,6 +114,35 @@ class RepoCard {
 		if( a.name.toLowerCase() < b.name.toLowerCase() ) return -1;
 		if( a.name.toLowerCase() > b.name.toLowerCase() ) return 1;
 		return 0;
+	}
+
+	loadLanguagesFilter( repos ) {
+		if( repos != null ) {
+			repos.forEach( ( item ) => {
+				if( item.language != null && this.filters.indexOf( item.language ) == -1 ) {
+					this.filters.push( item.language );
+				}
+			});
+
+			this.filters.sort();
+
+			this.putFiltersToSelect();
+		}
+	}
+
+	putFiltersToSelect() {
+		
+		this.filters.forEach( ( item ) => {
+			var temp       = document.createElement('div');
+			temp.innerHTML = `<option value="${item}">${item}</option>`;
+			var htmlObject = temp.firstChild;
+			
+			document.querySelector( '.filter-select' ).appendChild( htmlObject );
+		})
+	}
+
+	setData( data ) {
+		this.data = data;
 	}
 }
 

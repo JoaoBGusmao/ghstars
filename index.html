@@ -20,8 +20,22 @@
 					<h1>Lista de Repositórios com star do usuário wilfernandesjr</h1>
 				</div>
 			</header>
-			<div class='container'>
-				<div class='repo-list'>
+			<div class='container main-content'>
+				<div class='filters'>
+					<select class='order-select'>
+						<option value=''>Ordenação</option>
+						<option value='sortName'>Por nome</option>
+						<option value='sortStarsDescending'>Mais Stars</option>
+						<option value='sortStarsAscending'>Menos Stars</option>
+						<option value='sortIssuesDescending'>Mais Issues</option>
+						<option value='sortIssuesAscending'>Menos Issues</option>
+					</select>
+
+					<select class='filter-select'>
+						<option value=''>Todas as Linguagens</option>
+					</select>
+				</div>
+				<section class='repo-list'>
 					<div class='card-repo'>
 						<div class='header'>
 							<a href='{html_url}'>{name}</a>
@@ -47,8 +61,14 @@
 							<p class='language'>{language}</p>
 						</div>
 					</div>
-				</div>
+				</section>
 			</div>
+
+			<footer>
+				<div class='container'>
+					<p>Teste para Front-end na Escale. Código fonte: <a href='//github.com/joaobgusmao/ghstars'>Github</a></p>
+				</div>
+			</footer>
 		</div>
 	</body>
 
