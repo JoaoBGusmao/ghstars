@@ -439,7 +439,7 @@ var RepoCard = function () {
 
 			var render = this.template.getTemplate();
 
-			render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: item.description || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: item.created_at }, { prop: 'updated_at', to: item.updated_at }, { prop: 'language', to: item.language || 'Sem Linguagem' }], render);
+			render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: item.description || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: this.formatDate(item.created_at) }, { prop: 'updated_at', to: this.formatDate(item.updated_at) }, { prop: 'language', to: item.language || 'Sem Linguagem' }], render);
 
 			render = this.fixImageSrc(render);
 
@@ -536,6 +536,17 @@ var RepoCard = function () {
 			this.setData(null);
 			this.filterTemplate.wrapper.innerHTML = '';
 			this.filters = [];
+		}
+	}, {
+		key: 'formatDate',
+		value: function formatDate(date) {
+			var timestamp = Date.parse(date);
+			var date = new Date(timestamp);
+			var day = date.getDate();
+			var month = ("0" + (date.getMonth() + 1)).slice(-2);
+			var year = date.getFullYear();
+
+			return day + '/' + month + '/' + year;
 		}
 	}]);
 

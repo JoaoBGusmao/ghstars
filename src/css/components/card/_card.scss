@@ -12,8 +12,8 @@
 	}
 
 	.header {
-		border-top: 2px solid rgba(0,0,0,0.4);
-		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+		border-top: 2px solid $border;
+		border-bottom: 1px solid $lightBorder;
 		color: white;
 		font-weight: bold;
 		padding: 15px;
@@ -45,7 +45,7 @@
 			svg {
 				width: 100%;
 				height: auto;
-				fill: #ffc200
+				fill: $yellow;
 			}
 		}
 	}
@@ -61,8 +61,8 @@
 		}
 
 		p.description {
-			border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-			color: #808080;
+			border-bottom: 1px solid $lightBorder;
+			color: $textColor;
 			font-size: 14px;
 			line-height: 20px;
 			min-height: 75px;
@@ -71,15 +71,15 @@
 
 		.aditional-info {
 			p {
-				color: #808080;
+				color: $textColor;
 				font-size: 13px;
 				margin: 10px 0;
 			}
 		}
 
 		p.language {
-			border-top: 1px solid rgba(0, 0, 0, 0.05);
-			color: #808080;
+			border-top: 1px solid $lightBorder;
+			color: $textColor;
 			font-size: 13px;
 			padding-top: 10px;
 			text-align: center;

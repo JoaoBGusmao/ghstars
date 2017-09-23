@@ -1,7 +1,7 @@
 header.header {
 	.test p {
 		color: white;
-		background: rgb(255, 194, 0);
+		background: $yellow;
 		margin: 0;
 		padding: 4px;
 		text-align: center;
@@ -18,7 +18,7 @@ header.header {
 
 		a {
 			font-size: 13px;
-			color: #808080;
+			color: $textColor;
 		}
 	}
 
@@ -54,7 +54,7 @@ header.header {
 	}
 
 	h1 {
-		color: #808080;
+		color: $textColor;
 		font-size: 16px;
 		font-weight: normal;
 		margin-bottom: 0;

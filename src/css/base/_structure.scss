@@ -95,8 +95,8 @@ p {
 }
 
 footer p {
-	border-top: 1px solid rgba(0, 0, 0, 0.05);
-	color: #808080;
+	border-top: 1px solid $lightBorder;
+	color: $textColor;
 	font-size: 14px;
 	margin: 0 auto;
 	padding-top: 25px;
@@ -104,7 +104,7 @@ footer p {
 	width: 100%;
 
 	a {
-		color: #808080;
+		color: $textColor;
 		text-decoration: underline;
 	}
 }
@@ -123,14 +123,14 @@ footer p {
 
 input[type="text"] {
 	padding: 7px 12px;
-	border: 1px solid rgba(0, 0, 0, 0.05);
+	border: 1px solid $lightBorder;
 	font-size: 13px;
 	border-radius: 5px;
 }
 
 input[type="button"] {
 	background: white;
-	border: 1px solid rgba(0, 0, 0, 0.05);
+	border: 1px solid $lightBorder;
 	font-size: 13px;
 	padding: 7px 12px;
 	border-radius: 5px;

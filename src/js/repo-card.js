@@ -69,8 +69,8 @@ class RepoCard {
 			{ prop: 'description', to: item.description || 'Sem descrição' },
 			{ prop: 'owner.login', to: item.owner.login },
 			{ prop: 'open_issues_count', to: item.open_issues_count },
-			{ prop: 'created_at', to: item.created_at },
-			{ prop: 'updated_at', to: item.updated_at },
+			{ prop: 'created_at', to: this.formatDate( item.created_at ) },
+			{ prop: 'updated_at', to: this.formatDate( item.updated_at ) },
 			{ prop: 'language', to: item.language || 'Sem Linguagem' },
 		], render );
 
@@ -159,6 +159,16 @@ class RepoCard {
 		this.setData( null );
 		this.filterTemplate.wrapper.innerHTML = '';
 		this.filters = [];
+	}
+
+	formatDate( date ) {
+		var timestamp = Date.parse( date );
+		var date      = new Date( timestamp );
+		var day       = date.getDate();
+		var month     = ("0" + (date.getMonth() + 1)).slice(-2);
+		var year      = date.getFullYear();
+
+		return `${day}/${month}/${year}`;
 	}
 }
 
