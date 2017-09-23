@@ -93,6 +93,19 @@ footer p {
   footer p {
     width: 50%; } }
 
+input[type="text"] {
+  padding: 7px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 13px;
+  border-radius: 5px; }
+
+input[type="button"] {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 13px;
+  padding: 7px 12px;
+  border-radius: 5px; }
+
 header.header .test p {
   color: white;
   background: #ffc200;
@@ -101,16 +114,34 @@ header.header .test p {
   text-align: center;
   text-transform: uppercase; }
 
-header.header h1 {
+header.header .ghuser {
   border-bottom: 1px solid #E0E0E0;
-  color: #808080;
-  font-size: 16px;
-  padding: 25px 0;
+  padding: 15px 0;
   padding-top: 5px;
   text-align: center;
   width: 100%;
-  margin: 0;
-  font-weight: normal; }
+  margin: 0; }
+  header.header .ghuser a {
+    font-size: 13px;
+    color: #808080; }
+
+header.header .new-ghuser {
+  margin-top: 0;
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s; }
+  header.header .new-ghuser.active {
+    margin-top: 10px;
+    opacity: 1;
+    height: 32px;
+    visibility: visible; }
+
+header.header h1 {
+  color: #808080;
+  font-size: 16px;
+  font-weight: normal;
+  margin-bottom: 0; }
 
 header.header .container {
   padding-bottom: 0; }
@@ -195,7 +226,8 @@ header.header .container {
   padding: 6px 5px;
   width: 100%;
   margin-bottom: 20px;
-  font-size: 13px; }
+  font-size: 13px;
+  -webkit-appearance: none; }
 
 @media screen and (min-width: 768px) {
   .filters {

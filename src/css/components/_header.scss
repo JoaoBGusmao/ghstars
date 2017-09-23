@@ -8,16 +8,40 @@ header.header {
 		text-transform: uppercase;
 	}
 
-	h1 {
+	.ghuser {
 		border-bottom: 1px solid #E0E0E0;
-		color: #808080;
-		font-size: 16px;
-		padding: 25px 0;
+		padding: 15px 0;
 		padding-top: 5px;
 		text-align: center;
 		width: 100%;
 		margin: 0;
+
+		a {
+			font-size: 13px;
+			color: #808080;
+		}
+	}
+
+	.new-ghuser {
+		margin-top: 0;
+		height: 0;
+		opacity: 0;
+		visibility: hidden;
+		transition: all 0.5s;
+
+		&.active {
+			margin-top: 10px;
+			opacity: 1;
+			height: 32px;
+			visibility: visible;
+		}
+	}
+
+	h1 {
+		color: #808080;
+		font-size: 16px;
 		font-weight: normal;
+		margin-bottom: 0;
 	}
 
 	.container {

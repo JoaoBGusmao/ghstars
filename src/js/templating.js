@@ -1,6 +1,7 @@
 class Templating {
 	constructor() {
 		this.template = null;
+		this.wrapper = null;
 	}
 
 	getTemplate() {
@@ -17,27 +18,34 @@ class Templating {
 		var res = render;
 
 		toReplace.forEach( ( item, index ) => (
-			res = res.replace( `{${item.prop}}`, item.to )
+			res = this.replaceAll( res, `{${item.prop}}`, item.to )
 		));
 
 		return res;
 	}
 
-	appendHTML( selector, render ) {
+	appendHTML( render ) {
 		var temp       = document.createElement('div');
 		temp.innerHTML = render;
 		var htmlObject = temp.firstChild;
 		
 		htmlObject.classList.add( 'active' );
 
-		document.querySelector( selector ).appendChild( htmlObject );
+		this.wrapper.appendChild( htmlObject );
 	}
 
-	getHtmlTemplateFromDOM() {
-		var tpl = document.querySelector( '.repo-list .card-repo' ).outerHTML;
-		document.querySelector( '.repo-list' ).innerHTML = '';
-		
-		return tpl;
+	getHtmlTemplateFromDOM( selector ) {
+		var tpl = document.querySelector( selector );
+		var html = tpl.outerHTML;
+
+		this.wrapper = tpl.parentNode;
+		this.wrapper.innerHTML = '';
+
+		return html;
+	}
+
+	replaceAll( str, find, replace ) {
+		return str.replace(new RegExp(find, 'g'), replace);
 	}
 }
 

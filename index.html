@@ -4,7 +4,7 @@
 		<title>GH Stars</title>
 		<meta charset='utf-8' />
 		<link rel='stylesheet' href='./dist/style.css'>
-		<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
 	</head>
 
 	<body>
@@ -17,7 +17,14 @@
 					<p>Teste Escale</p>
 				</div>
 				<div class='container'>
-					<h1>Lista de Repositórios com star do usuário wilfernandesjr</h1>
+					<div class='ghuser'>
+						<h1>Lista de Repositórios com star do usuário <span id='ghuser'></span></h1>
+						<a href='#' id='change-ghuser'>Alterar usuário</a>
+						<div class='new-ghuser'>
+							<input class='ghuser-input' type='text' />
+							<input class='ghuser-button' type='button' value='Aterar' />
+						</div>
+					</div>
 				</div>
 			</header>
 			<div class='container main-content'>
@@ -32,7 +39,7 @@
 					</select>
 
 					<select class='filter-select'>
-						<option value=''>Todas as Linguagens</option>
+						<option value='{language}'>{language}</option>
 					</select>
 				</div>
 				<section class='repo-list'>

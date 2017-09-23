@@ -97,7 +97,7 @@ var App = function () {
 
 		this.state = {
 			loading: false,
-			filter: '',
+			filter: 'Todas as Linguagens',
 			ghuser: 'wilfernandesjr',
 			sort: 'sortStarsDescending'
 		};
@@ -110,17 +110,26 @@ var App = function () {
 		key: 'reloadCards',
 		value: function reloadCards(callApiAgain) {
 			if (callApiAgain) {
-				this.cards.data = null;
+				this.cards.setData(null);
 			}
 
+			this.setGHUserToDOM();
 			this.startLoading();
 			this.makeGHCall();
+		}
+	}, {
+		key: 'setGHUserToDOM',
+		value: function setGHUserToDOM() {
+			document.getElementById('ghuser').innerHTML = this.state.ghuser;
+			document.querySelector('.ghuser-input').value = this.state.ghuser;
 		}
 	}, {
 		key: 'addEventListeners',
 		value: function addEventListeners() {
 			document.querySelector('.order-select').addEventListener('change', this.orderChanged.bind(this));
 			document.querySelector('.filter-select').addEventListener('change', this.filterChanged.bind(this));
+			document.getElementById('change-ghuser').addEventListener('click', this.openGHUserChange.bind(this));
+			document.querySelector('.ghuser-button').addEventListener('click', this.GHUserChange.bind(this));
 		}
 	}, {
 		key: 'orderChanged',
@@ -140,6 +149,26 @@ var App = function () {
 
 			this.cards.validateFilter();
 			this.reloadCards(false);
+		}
+	}, {
+		key: 'openGHUserChange',
+		value: function openGHUserChange(e) {
+			e.preventDefault();
+			document.querySelector('.new-ghuser').classList.add('active');
+		}
+	}, {
+		key: 'GHUserChange',
+		value: function GHUserChange() {
+			var newGhUser = document.querySelector('.ghuser-input').value;
+
+			this.setState(_extends({}, this.state, {
+				ghuser: newGhUser,
+				'filter': 'Todas as Linguagens'
+			}));
+
+			this.cards.clearCards();
+
+			return this.reloadCards(true);
 		}
 	}, {
 		key: 'makeGHCall',
@@ -305,6 +334,7 @@ var RepoCard = function () {
 		this.data = null;
 		this.template = new _templating2.default();
 		this.filters = [];
+		this.filterTemplate = new _templating2.default();
 	}
 
 	_createClass(RepoCard, [{
@@ -313,7 +343,7 @@ var RepoCard = function () {
 			var _this = this;
 
 			if (this.template.getTemplate() != null) {
-				this.clearResults();
+				this.template.wrapper.innerHTML = '';
 			}
 
 			var ghStars = JSON.parse(this.data);
@@ -358,26 +388,21 @@ var RepoCard = function () {
 		key: 'renderCard',
 		value: function renderCard(item) {
 			if (this.template.getTemplate() == null) {
-				this.template.setTemplate(this.template.getHtmlTemplateFromDOM());
+				this.template.setTemplate(this.template.getHtmlTemplateFromDOM('.repo-list .card-repo'));
 			}
 
 			var render = this.template.getTemplate();
 
-			render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: item.description || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: item.created_at }, { prop: 'updated_at', to: item.updated_at }, { prop: 'language', to: item.language }], render);
+			render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: item.description || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: item.created_at }, { prop: 'updated_at', to: item.updated_at }, { prop: 'language', to: item.language || 'Sem Linguagem' }], render);
 
 			render = this.fixImageSrc(render);
 
-			this.template.appendHTML('.repo-list', render);
-		}
-	}, {
-		key: 'clearResults',
-		value: function clearResults() {
-			document.querySelector('.repo-list').innerHTML = '';
+			this.template.appendHTML(render);
 		}
 	}, {
 		key: 'fitInFilter',
 		value: function fitInFilter(item) {
-			var fit = item.language === this.app.state.filter || this.app.state.filter === '';
+			var fit = item.language === this.app.state.filter || this.app.state.filter === 'Todas as Linguagens';
 
 			return fit;
 		}
@@ -429,26 +454,42 @@ var RepoCard = function () {
 
 				this.filters.sort();
 
+				this.filters.unshift('Todas as Linguagens');
+
 				this.putFiltersToSelect();
 			}
 		}
 	}, {
 		key: 'putFiltersToSelect',
 		value: function putFiltersToSelect() {
-			this.filters.forEach(function (item) {
-				if (document.querySelector('option[value="' + item + '"]') == null) {
-					var temp = document.createElement('div');
-					temp.innerHTML = '<option value="' + item + '">' + item + '</option>';
-					var htmlObject = temp.firstChild;
+			var _this3 = this;
 
-					document.querySelector('.filter-select').appendChild(htmlObject);
+			if (this.filterTemplate.getTemplate() == null) {
+				this.filterTemplate.setTemplate(this.filterTemplate.getHtmlTemplateFromDOM('.filter-select option'));
+			}
+
+			this.filters.forEach(function (item, index) {
+				if (document.querySelector('option[value="' + item + '"]') != null) {
+					return;
 				}
+
+				var render = _this3.filterTemplate.getTemplate();
+				render = _this3.template.variablesReplace([{ prop: 'language', to: item || 'Sem Linguagem' }], render);
+
+				_this3.filterTemplate.appendHTML(render);
 			});
 		}
 	}, {
 		key: 'setData',
 		value: function setData(data) {
 			this.data = data;
+		}
+	}, {
+		key: 'clearCards',
+		value: function clearCards() {
+			this.setData(null);
+			this.filterTemplate.wrapper.innerHTML = '';
+			this.filters = [];
 		}
 	}]);
 
@@ -484,6 +525,7 @@ var Templating = function () {
 		_classCallCheck(this, Templating);
 
 		this.template = null;
+		this.wrapper = null;
 	}
 
 	_createClass(Templating, [{
@@ -501,32 +543,42 @@ var Templating = function () {
 	}, {
 		key: 'variablesReplace',
 		value: function variablesReplace(toReplace, render) {
+			var _this = this;
+
 			var res = render;
 
 			toReplace.forEach(function (item, index) {
-				return res = res.replace('{' + item.prop + '}', item.to);
+				return res = _this.replaceAll(res, '{' + item.prop + '}', item.to);
 			});
 
 			return res;
 		}
 	}, {
 		key: 'appendHTML',
-		value: function appendHTML(selector, render) {
+		value: function appendHTML(render) {
 			var temp = document.createElement('div');
 			temp.innerHTML = render;
 			var htmlObject = temp.firstChild;
 
 			htmlObject.classList.add('active');
 
-			document.querySelector(selector).appendChild(htmlObject);
+			this.wrapper.appendChild(htmlObject);
 		}
 	}, {
 		key: 'getHtmlTemplateFromDOM',
-		value: function getHtmlTemplateFromDOM() {
-			var tpl = document.querySelector('.repo-list .card-repo').outerHTML;
-			document.querySelector('.repo-list').innerHTML = '';
+		value: function getHtmlTemplateFromDOM(selector) {
+			var tpl = document.querySelector(selector);
+			var html = tpl.outerHTML;
 
-			return tpl;
+			this.wrapper = tpl.parentNode;
+			this.wrapper.innerHTML = '';
+
+			return html;
+		}
+	}, {
+		key: 'replaceAll',
+		value: function replaceAll(str, find, replace) {
+			return str.replace(new RegExp(find, 'g'), replace);
 		}
 	}]);
 

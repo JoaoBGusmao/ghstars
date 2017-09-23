@@ -6,11 +6,12 @@ class RepoCard {
 		this.data     = null;
 		this.template = new Templating();
 		this.filters  = [];
+		this.filterTemplate = new Templating();
 	}
 
 	showCards() {
 		if( this.template.getTemplate() != null ) {
-			this.clearResults();
+			this.template.wrapper.innerHTML = '';
 		}
 
 		var ghStars = JSON.parse( this.data );
@@ -56,7 +57,7 @@ class RepoCard {
 
 	renderCard( item ) {
 		if( this.template.getTemplate() == null ) {
-			this.template.setTemplate( this.template.getHtmlTemplateFromDOM() );
+			this.template.setTemplate( this.template.getHtmlTemplateFromDOM( '.repo-list .card-repo' ) );
 		}
 
 		var render = this.template.getTemplate();
@@ -70,20 +71,17 @@ class RepoCard {
 			{ prop: 'open_issues_count', to: item.open_issues_count },
 			{ prop: 'created_at', to: item.created_at },
 			{ prop: 'updated_at', to: item.updated_at },
-			{ prop: 'language', to: item.language },
+			{ prop: 'language', to: item.language || 'Sem Linguagem' },
 		], render );
 
 		render = this.fixImageSrc( render );
 
-		this.template.appendHTML( '.repo-list', render );
-	}
-
-	clearResults() {
-		document.querySelector( '.repo-list' ).innerHTML = '';
+		this.template.appendHTML( render );
 	}
 
 	fitInFilter( item ) {
-		var fit = item.language === this.app.state.filter || this.app.state.filter === '';
+		var fit = item.language === this.app.state.filter
+				|| this.app.state.filter === 'Todas as Linguagens'
 
 		return fit;
 	}
@@ -126,24 +124,41 @@ class RepoCard {
 
 			this.filters.sort();
 
+			this.filters.unshift( 'Todas as Linguagens' )
+
 			this.putFiltersToSelect();
 		}
 	}
 
 	putFiltersToSelect() {
-		this.filters.forEach( ( item ) => {
-			if( document.querySelector( `option[value="${item}"]` ) == null ) {
-				var temp       = document.createElement('div');
-				temp.innerHTML = `<option value="${item}">${item}</option>`;
-				var htmlObject = temp.firstChild;
-				
-				document.querySelector( '.filter-select' ).appendChild( htmlObject );
+		if( this.filterTemplate.getTemplate() == null ) {
+			this.filterTemplate.setTemplate(
+				this.filterTemplate.getHtmlTemplateFromDOM( '.filter-select option' )
+			);
+		}
+
+		this.filters.forEach( ( item, index ) => {
+			if( document.querySelector( `option[value="${item}"]` ) != null ) {
+				return;
 			}
+
+			var render = this.filterTemplate.getTemplate();
+			render = this.template.variablesReplace( [
+				{ prop: 'language', to: item || 'Sem Linguagem' },
+			], render );
+
+			this.filterTemplate.appendHTML( render )
 		})
 	}
 
 	setData( data ) {
 		this.data = data;
+	}
+
+	clearCards() {
+		this.setData( null );
+		this.filterTemplate.wrapper.innerHTML = '';
+		this.filters = [];
 	}
 }
 
