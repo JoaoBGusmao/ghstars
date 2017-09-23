@@ -1,24 +1,20 @@
 class RepoCard {
-	constructor() {
-		this.state = {
-			loading: false,
-			filter: 'JavaScript'
-		};
-
+	constructor( app ) {
+		this.app      = app;
 		this.template = null;
 	}
 
 	startLoading() {
-		this.setState({
-			...this.state,
+		this.app.setState({
+			...this.app.state,
 			loading: true
 		});
 		document.querySelector( '.loading' ).classList.add( 'active' );
 	}
 
 	stopLoading() {
-		this.setState({
-			...this.state,
+		this.app.setState({
+			...this.app.state,
 			loading: false
 		});
 		document.querySelector( '.loading' ).classList.remove( 'active' );
@@ -72,7 +68,7 @@ class RepoCard {
 	}
 
 	fitInFilter( item ) {
-		var fit = item.language === this.state.filter;
+		var fit = item.language === this.app.state.filter;
 
 		return fit;
 	}
@@ -88,10 +84,6 @@ class RepoCard {
 		var fixed = res.replace( 'data-img-src', 'src' );
 
 		return fixed;
-	}
-
-	setState( state ) {
-		this.state = state;
 	}
 
 	sortStarsDescending( a, b ) {

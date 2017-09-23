@@ -3,23 +3,37 @@ import RepoCard from './repo-card'
 
 import '../css/style.scss'
 
-let cards = null;
+class App {
+	constructor() {
+		this.api    = new apiWorker();
+		this.cards  = new RepoCard( this );
 
-const init = () => {
-	const user   = 'wilfernandesjr';
-	const worker = new apiWorker();
-	cards = new RepoCard();
+		this.state = {
+			loading: false,
+			filter: 'JavaScript',
+			ghuser: 'wilfernandesjr',
+			sort: 'sortStarsDescending'
+		};
 
-	cards.startLoading();
+		this.cards.startLoading();
 
-	worker.api( 'https://api.github.com' )
-		  .toRoute( `users/${user}/starred` )
-		  .whenDone( dataReceived )
-		  .make()
+		this.makeGHCall();
+	}
+
+	makeGHCall() {
+		this.api.api( 'https://api.github.com' )
+			  .toRoute( `users/${this.state.ghuser}/starred` )
+			  .whenDone( this.dataReceived.bind( this ) )
+			  .make()
+	}
+
+	dataReceived( data ) {
+		this.cards.showCards( data )
+	}
+
+	setState( state ) {
+		this.state = state;
+	}
 }
 
-const dataReceived = ( data ) => {
-	cards.showCards( data );
-}
-
-init()
+new App();

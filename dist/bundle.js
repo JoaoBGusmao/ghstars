@@ -70,6 +70,8 @@
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _apiWorker = __webpack_require__(1);
 
 var _apiWorker2 = _interopRequireDefault(_apiWorker);
@@ -82,23 +84,48 @@ __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var cards = null;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var init = function init() {
-	var user = 'wilfernandesjr';
-	var worker = new _apiWorker2.default();
-	cards = new _repoCard2.default();
+var App = function () {
+	function App() {
+		_classCallCheck(this, App);
 
-	cards.startLoading();
+		this.api = new _apiWorker2.default();
+		this.cards = new _repoCard2.default(this);
 
-	worker.api('https://api.github.com').toRoute('users/' + user + '/starred').whenDone(dataReceived).make();
-};
+		this.state = {
+			loading: false,
+			filter: 'JavaScript',
+			ghuser: 'wilfernandesjr',
+			sort: 'sortStarsDescending'
+		};
 
-var dataReceived = function dataReceived(data) {
-	cards.showCards(data);
-};
+		this.cards.startLoading();
 
-init();
+		this.makeGHCall();
+	}
+
+	_createClass(App, [{
+		key: 'makeGHCall',
+		value: function makeGHCall() {
+			this.api.api('https://api.github.com').toRoute('users/' + this.state.ghuser + '/starred').whenDone(this.dataReceived.bind(this)).make();
+		}
+	}, {
+		key: 'dataReceived',
+		value: function dataReceived(data) {
+			this.cards.showCards(data);
+		}
+	}, {
+		key: 'setState',
+		value: function setState(state) {
+			this.state = state;
+		}
+	}]);
+
+	return App;
+}();
+
+new App();
 
 /***/ }),
 /* 1 */
@@ -209,21 +236,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var RepoCard = function () {
-	function RepoCard() {
+	function RepoCard(app) {
 		_classCallCheck(this, RepoCard);
 
-		this.state = {
-			loading: false,
-			filter: 'JavaScript'
-		};
-
+		this.app = app;
 		this.template = null;
 	}
 
 	_createClass(RepoCard, [{
 		key: 'startLoading',
 		value: function startLoading() {
-			this.setState(_extends({}, this.state, {
+			this.app.setState(_extends({}, this.app.state, {
 				loading: true
 			}));
 			document.querySelector('.loading').classList.add('active');
@@ -231,7 +254,7 @@ var RepoCard = function () {
 	}, {
 		key: 'stopLoading',
 		value: function stopLoading() {
-			this.setState(_extends({}, this.state, {
+			this.app.setState(_extends({}, this.app.state, {
 				loading: false
 			}));
 			document.querySelector('.loading').classList.remove('active');
@@ -292,7 +315,7 @@ var RepoCard = function () {
 	}, {
 		key: 'fitInFilter',
 		value: function fitInFilter(item) {
-			var fit = item.language === this.state.filter;
+			var fit = item.language === this.app.state.filter;
 
 			return fit;
 		}
@@ -310,11 +333,6 @@ var RepoCard = function () {
 			var fixed = res.replace('data-img-src', 'src');
 
 			return fixed;
-		}
-	}, {
-		key: 'setState',
-		value: function setState(state) {
-			this.state = state;
 		}
 	}, {
 		key: 'sortStarsDescending',
