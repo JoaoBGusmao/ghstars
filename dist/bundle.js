@@ -233,6 +233,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _templating = __webpack_require__(5);
+
+var _templating2 = _interopRequireDefault(_templating);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var RepoCard = function () {
@@ -240,7 +246,7 @@ var RepoCard = function () {
 		_classCallCheck(this, RepoCard);
 
 		this.app = app;
-		this.template = null;
+		this.template = new _templating2.default();
 	}
 
 	_createClass(RepoCard, [{
@@ -279,38 +285,17 @@ var RepoCard = function () {
 	}, {
 		key: 'renderCard',
 		value: function renderCard(item) {
-			if (this.template == null) {
-				this.template = this.getTemplate();
+			if (this.template.getTemplate() == null) {
+				this.template.setTemplate(this.template.getHtmlTemplateFromDOM());
 			}
 
-			var render = this.template;
-			render = this.prepareToRender(render, item);
+			var render = this.template.getTemplate();
 
-			var temp = document.createElement('div');
-			temp.innerHTML = render;
-			var htmlObject = temp.firstChild;
-			htmlObject.classList.add('active');
+			render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: item.description || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: item.created_at }, { prop: 'updated_at', to: item.updated_at }, { prop: 'language', to: item.language }], render);
 
-			document.querySelector('.repo-list').appendChild(htmlObject);
-		}
-	}, {
-		key: 'prepareToRender',
-		value: function prepareToRender(render, item) {
-			var res = render;
+			render = this.fixImageSrc(render);
 
-			res = res.replace('{name}', item.name);
-			res = res.replace('{html_url}', item.html_url);
-			res = res.replace('{stargazers_count}', item.stargazers_count.toLocaleString());
-			res = res.replace('{description}', item.description || 'Sem descrição');
-			res = res.replace('{owner.login}', item.owner.login);
-			res = res.replace('{open_issues_count}', item.open_issues_count);
-			res = res.replace('{created_at}', item.created_at);
-			res = res.replace('{updated_at}', item.updated_at);
-			res = res.replace('{language}', item.language);
-
-			res = this.fixImageSrc(res);
-
-			return res;
+			this.template.appendHTML('.repo-list', render);
 		}
 	}, {
 		key: 'fitInFilter',
@@ -318,14 +303,6 @@ var RepoCard = function () {
 			var fit = item.language === this.app.state.filter;
 
 			return fit;
-		}
-	}, {
-		key: 'getTemplate',
-		value: function getTemplate() {
-			var tpl = document.querySelector('.repo-list .card-repo').outerHTML;
-			document.querySelector('.repo-list').innerHTML = '';
-
-			return tpl;
 		}
 	}, {
 		key: 'fixImageSrc',
@@ -373,6 +350,78 @@ exports.default = RepoCard;
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 4 */,
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Templating = function () {
+	function Templating() {
+		_classCallCheck(this, Templating);
+
+		this.template = null;
+	}
+
+	_createClass(Templating, [{
+		key: 'getTemplate',
+		value: function getTemplate() {
+			var template = this.template;
+
+			return template;
+		}
+	}, {
+		key: 'setTemplate',
+		value: function setTemplate(template) {
+			this.template = template;
+		}
+	}, {
+		key: 'variablesReplace',
+		value: function variablesReplace(toReplace, render) {
+			var res = render;
+
+			toReplace.forEach(function (item, index) {
+				return res = res.replace('{' + item.prop + '}', item.to);
+			});
+
+			return res;
+		}
+	}, {
+		key: 'appendHTML',
+		value: function appendHTML(selector, render) {
+			var temp = document.createElement('div');
+			temp.innerHTML = render;
+			var htmlObject = temp.firstChild;
+
+			htmlObject.classList.add('active');
+
+			document.querySelector(selector).appendChild(htmlObject);
+		}
+	}, {
+		key: 'getHtmlTemplateFromDOM',
+		value: function getHtmlTemplateFromDOM() {
+			var tpl = document.querySelector('.repo-list .card-repo').outerHTML;
+			document.querySelector('.repo-list').innerHTML = '';
+
+			return tpl;
+		}
+	}]);
+
+	return Templating;
+}();
+
+exports.default = Templating;
 
 /***/ })
 /******/ ]);

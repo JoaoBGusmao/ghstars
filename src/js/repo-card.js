@@ -1,7 +1,9 @@
+import Templating from './templating'
+
 class RepoCard {
 	constructor( app ) {
 		this.app      = app;
-		this.template = null;
+		this.template = new Templating();
 	}
 
 	startLoading() {
@@ -34,50 +36,33 @@ class RepoCard {
 	}
 
 	renderCard( item ) {
-		if( this.template == null ) {
-			this.template = this.getTemplate();
+		if( this.template.getTemplate() == null ) {
+			this.template.setTemplate( this.template.getHtmlTemplateFromDOM() );
 		}
 
-		var render = this.template;
-		render = this.prepareToRender( render, item );
+		var render = this.template.getTemplate();
+		
+		render = this.template.variablesReplace( [
+			{ prop: 'name', to: item.name },
+			{ prop: 'html_url', to: item.html_url },
+			{ prop: 'stargazers_count', to: ( item.stargazers_count ).toLocaleString() },
+			{ prop: 'description', to: item.description || 'Sem descrição' },
+			{ prop: 'owner.login', to: item.owner.login },
+			{ prop: 'open_issues_count', to: item.open_issues_count },
+			{ prop: 'created_at', to: item.created_at },
+			{ prop: 'updated_at', to: item.updated_at },
+			{ prop: 'language', to: item.language },
+		], render );
 
-		var temp = document.createElement('div');
-		temp.innerHTML = render;
-		var htmlObject = temp.firstChild;
-		htmlObject.classList.add( 'active' );
+		render = this.fixImageSrc( render );
 
-		document.querySelector( '.repo-list' ).appendChild( htmlObject );
-	}
-
-	prepareToRender( render, item ) {
-		var res = render;
-
-		res = res.replace( '{name}', item.name );
-		res = res.replace( '{html_url}', item.html_url );
-		res = res.replace( '{stargazers_count}', ( item.stargazers_count ).toLocaleString() );
-		res = res.replace( '{description}', item.description || 'Sem descrição' );
-		res = res.replace( '{owner.login}', item.owner.login );
-		res = res.replace( '{open_issues_count}', item.open_issues_count );
-		res = res.replace( '{created_at}', item.created_at );
-		res = res.replace( '{updated_at}', item.updated_at );
-		res = res.replace( '{language}', item.language );
-
-		res = this.fixImageSrc( res );
-
-		return res;
+		this.template.appendHTML( '.repo-list', render );
 	}
 
 	fitInFilter( item ) {
 		var fit = item.language === this.app.state.filter;
 
 		return fit;
-	}
-
-	getTemplate() {
-		var tpl = document.querySelector( '.repo-list .card-repo' ).outerHTML;
-		document.querySelector( '.repo-list' ).innerHTML = '';
-		
-		return tpl;
 	}
 
 	fixImageSrc( res ) {
