@@ -435,13 +435,14 @@ var RepoCard = function () {
 	}, {
 		key: 'putFiltersToSelect',
 		value: function putFiltersToSelect() {
-
 			this.filters.forEach(function (item) {
-				var temp = document.createElement('div');
-				temp.innerHTML = '<option value="' + item + '">' + item + '</option>';
-				var htmlObject = temp.firstChild;
+				if (document.querySelector('option[value="' + item + '"]') == null) {
+					var temp = document.createElement('div');
+					temp.innerHTML = '<option value="' + item + '">' + item + '</option>';
+					var htmlObject = temp.firstChild;
 
-				document.querySelector('.filter-select').appendChild(htmlObject);
+					document.querySelector('.filter-select').appendChild(htmlObject);
+				}
 			});
 		}
 	}, {

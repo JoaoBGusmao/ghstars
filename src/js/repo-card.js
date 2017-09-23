@@ -131,13 +131,14 @@ class RepoCard {
 	}
 
 	putFiltersToSelect() {
-		
 		this.filters.forEach( ( item ) => {
-			var temp       = document.createElement('div');
-			temp.innerHTML = `<option value="${item}">${item}</option>`;
-			var htmlObject = temp.firstChild;
-			
-			document.querySelector( '.filter-select' ).appendChild( htmlObject );
+			if( document.querySelector( `option[value="${item}"]` ) == null ) {
+				var temp       = document.createElement('div');
+				temp.innerHTML = `<option value="${item}">${item}</option>`;
+				var htmlObject = temp.firstChild;
+				
+				document.querySelector( '.filter-select' ).appendChild( htmlObject );
+			}
 		})
 	}
 
