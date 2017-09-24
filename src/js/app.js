@@ -33,7 +33,6 @@ class App {
 
 	setGHUserToDOM() {
 		document.getElementById( 'ghuser' ).innerHTML = this.state.ghuser;
-		document.querySelector( '.ghuser-input' ).value = this.state.ghuser;
 	}
 
 	addEventListeners() {

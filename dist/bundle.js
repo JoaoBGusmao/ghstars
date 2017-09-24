@@ -126,7 +126,6 @@ var App = function () {
 		key: 'setGHUserToDOM',
 		value: function setGHUserToDOM() {
 			document.getElementById('ghuser').innerHTML = this.state.ghuser;
-			document.querySelector('.ghuser-input').value = this.state.ghuser;
 		}
 	}, {
 		key: 'addEventListeners',
