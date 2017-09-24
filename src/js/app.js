@@ -65,19 +65,27 @@ class App {
 	toggleGHUserChange( e ) {
 		if( e )
 			e.preventDefault();
-		
+
 		var ghUserClasses = document.querySelector( '.new-ghuser' ).classList;
+		var changeUser = document.getElementById( 'change-ghuser' );
+
 		if( ghUserClasses.contains( 'active' ) ) {
 			this.setState({
 				...this.state,
 				searching: false,
 			});
+
+			changeUser.innerHTML = changeUser.dataset.default;
+
 			return ghUserClasses.remove( 'active' );
 		}
 		this.setState({
 			...this.state,
 			searching: true,
 		});
+
+		changeUser.innerHTML = changeUser.dataset.close;
+
 		return ghUserClasses.add( 'active' );
 	}
 
