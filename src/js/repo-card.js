@@ -33,22 +33,20 @@ class RepoCard {
 	sortCards( a, b ) {
 		var sort = this.app.state.sort;
 		
-		if( sort == 'sortName' )
-			return this.sortName( a, b );
-
-		if( sort == 'sortStarsDescending' )
-			return this.sortStarsDescending( a, b );
-
-		if( sort == 'sortStarsAscending' )
-			return this.sortStarsAscending( a, b );
-
-		if( sort == 'sortIssuesDescending' )
-			return this.sortIssuesDescending( a, b );
-
-		if( sort == 'sortIssuesAscending' )
-			return this.sortIssuesAscending( a, b );
-
-		return this.sortStarsDescending( a, b );
+		switch( sort ) {
+			case 'sortName':
+				return this.sortName( a, b );
+			case 'sortStarsDescending':
+				return this.sortStarsDescending( a, b );
+			case 'sortStarsAscending':
+				return this.sortStarsAscending( a, b );
+			case 'sortIssuesDescending':
+				return this.sortIssuesDescending( a, b );
+			case 'sortIssuesAscending':
+				return this.sortIssuesAscending( a, b );
+			default:
+				return this.sortStarsDescending( a, b );
+		}
 	}
 
 	validateFilter() {
