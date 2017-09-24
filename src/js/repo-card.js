@@ -35,17 +35,18 @@ class RepoCard {
 		
 		switch( sort ) {
 			case 'sortName':
-				return this.sortName( a, b );
-			case 'sortStarsDescending':
-				return this.sortStarsDescending( a, b );
+				if( a.name.toLowerCase() < b.name.toLowerCase() ) return -1;
+				if( a.name.toLowerCase() > b.name.toLowerCase() ) return 1;
+				return 0;
 			case 'sortStarsAscending':
-				return this.sortStarsAscending( a, b );
+				return parseInt( a.stargazers_count ) - parseInt( b.stargazers_count );
 			case 'sortIssuesDescending':
-				return this.sortIssuesDescending( a, b );
+				return parseInt( b.open_issues_count ) - parseInt( a.open_issues_count );
 			case 'sortIssuesAscending':
-				return this.sortIssuesAscending( a, b );
+				return parseInt( a.open_issues_count ) - parseInt( b.open_issues_count );
+			case 'sortStarsDescending':
 			default:
-				return this.sortStarsDescending( a, b );
+				return parseInt( b.stargazers_count ) - parseInt( a.stargazers_count );
 		}
 	}
 
@@ -90,28 +91,6 @@ class RepoCard {
 		var fixed = res.replace( 'data-img-src', 'src' );
 
 		return fixed;
-	}
-
-	sortStarsDescending( a, b ) {
-		return parseInt( b.stargazers_count ) - parseInt( a.stargazers_count );
-	}
-
-	sortStarsAscending( a, b ) {
-		return parseInt( a.stargazers_count ) - parseInt( b.stargazers_count );
-	}
-
-	sortIssuesDescending( a, b ) {
-		return parseInt( b.open_issues_count ) - parseInt( a.open_issues_count );
-	}
-
-	sortIssuesAscending( a, b ) {
-		return parseInt( a.open_issues_count ) - parseInt( b.open_issues_count );
-	}
-
-	sortName( a, b ) {
-		if( a.name.toLowerCase() < b.name.toLowerCase() ) return -1;
-		if( a.name.toLowerCase() > b.name.toLowerCase() ) return 1;
-		return 0;
 	}
 
 	loadLanguagesFilter( repos ) {

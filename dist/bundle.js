@@ -437,17 +437,18 @@ var RepoCard = function () {
 
 			switch (sort) {
 				case 'sortName':
-					return this.sortName(a, b);
-				case 'sortStarsDescending':
-					return this.sortStarsDescending(a, b);
+					if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+					if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+					return 0;
 				case 'sortStarsAscending':
-					return this.sortStarsAscending(a, b);
+					return parseInt(a.stargazers_count) - parseInt(b.stargazers_count);
 				case 'sortIssuesDescending':
-					return this.sortIssuesDescending(a, b);
+					return parseInt(b.open_issues_count) - parseInt(a.open_issues_count);
 				case 'sortIssuesAscending':
-					return this.sortIssuesAscending(a, b);
+					return parseInt(a.open_issues_count) - parseInt(b.open_issues_count);
+				case 'sortStarsDescending':
 				default:
-					return this.sortStarsDescending(a, b);
+					return parseInt(b.stargazers_count) - parseInt(a.stargazers_count);
 			}
 		}
 	}, {
@@ -485,33 +486,6 @@ var RepoCard = function () {
 			var fixed = res.replace('data-img-src', 'src');
 
 			return fixed;
-		}
-	}, {
-		key: 'sortStarsDescending',
-		value: function sortStarsDescending(a, b) {
-			return parseInt(b.stargazers_count) - parseInt(a.stargazers_count);
-		}
-	}, {
-		key: 'sortStarsAscending',
-		value: function sortStarsAscending(a, b) {
-			return parseInt(a.stargazers_count) - parseInt(b.stargazers_count);
-		}
-	}, {
-		key: 'sortIssuesDescending',
-		value: function sortIssuesDescending(a, b) {
-			return parseInt(b.open_issues_count) - parseInt(a.open_issues_count);
-		}
-	}, {
-		key: 'sortIssuesAscending',
-		value: function sortIssuesAscending(a, b) {
-			return parseInt(a.open_issues_count) - parseInt(b.open_issues_count);
-		}
-	}, {
-		key: 'sortName',
-		value: function sortName(a, b) {
-			if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-			if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-			return 0;
 		}
 	}, {
 		key: 'loadLanguagesFilter',
