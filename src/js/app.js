@@ -7,7 +7,6 @@ import '../css/style.scss'
 class App {
 	constructor() {
 		this.api    = new apiWorker();
-		this.emojis = new ghemojis();
 		this.cards  = new RepoCard( this );
 
 		this.state = {

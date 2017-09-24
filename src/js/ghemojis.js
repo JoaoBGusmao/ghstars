@@ -12,9 +12,10 @@ class Ghemojis {
 	}
 
 	getFromLocal() {
-		console.log( 'getting from local' );
 		try {
-			return JSON.parse( localStorage.getItem( this.cacheName ) );
+			var storage = JSON.parse( localStorage.getItem( this.cacheName ) );
+			this.replaceBody();
+			return storage;
 		} catch(e) {
 			return null;
 		}
@@ -23,7 +24,6 @@ class Ghemojis {
 	}
 
 	getFromApi() {
-		console.log( 'getting from api' );
 		return this.api.api( 'https://api.github.com' )
 						.toRoute( 'emojis' )
 						.whenDone( this.saveCache.bind( this ) )
@@ -34,10 +34,17 @@ class Ghemojis {
 	saveCache( data ) {
 		this.emojiLib = JSON.parse( data );
 		localStorage.setItem( this.cacheName, data );
+		this.replaceBody();
 	}
 
 	apiError() {
+		console.log( "Não fo possível obter os emojis da API" );
+	}
 
+	replaceBody() {
+		var body = document.querySelector( 'body' ).innerHTML;
+		body = this.replace( body );
+		document.querySelector( 'body' ).innerHTML = body;
 	}
 
 	replace( text ) {
@@ -54,13 +61,13 @@ class Ghemojis {
 
 	getEmojiImg( emoji ) {
 		if( this.emojiLib[ emoji ] ) {
-			return this.getEmojiCode( this.emojiLib[ emoji ] );
+			return this.getEmojiCode( this.emojiLib[ emoji ], emoji );
 		}
 		return null;
 	}
 
-	getEmojiCode( img ) {
-		return `<img class='gh-emoji' src="${img}" />`;
+	getEmojiCode( img, name ) {
+		return `<img class='gh-emoji' src="${img}" alt=":${name}:" />`;
 	}
 }
 

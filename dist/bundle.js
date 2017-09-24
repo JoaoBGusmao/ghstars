@@ -97,7 +97,6 @@ var App = function () {
 		_classCallCheck(this, App);
 
 		this.api = new _apiWorker2.default();
-		this.emojis = new _ghemojis2.default();
 		this.cards = new _repoCard2.default(this);
 
 		this.state = {
@@ -692,9 +691,10 @@ var Ghemojis = function () {
 	}, {
 		key: 'getFromLocal',
 		value: function getFromLocal() {
-			console.log('getting from local');
 			try {
-				return JSON.parse(localStorage.getItem(this.cacheName));
+				var storage = JSON.parse(localStorage.getItem(this.cacheName));
+				this.replaceBody();
+				return storage;
 			} catch (e) {
 				return null;
 			}
@@ -704,7 +704,6 @@ var Ghemojis = function () {
 	}, {
 		key: 'getFromApi',
 		value: function getFromApi() {
-			console.log('getting from api');
 			return this.api.api('https://api.github.com').toRoute('emojis').whenDone(this.saveCache.bind(this)).throw(this.apiError.bind(this)).make();
 		}
 	}, {
@@ -712,10 +711,20 @@ var Ghemojis = function () {
 		value: function saveCache(data) {
 			this.emojiLib = JSON.parse(data);
 			localStorage.setItem(this.cacheName, data);
+			this.replaceBody();
 		}
 	}, {
 		key: 'apiError',
-		value: function apiError() {}
+		value: function apiError() {
+			console.log("Não fo possível obter os emojis da API");
+		}
+	}, {
+		key: 'replaceBody',
+		value: function replaceBody() {
+			var body = document.querySelector('body').innerHTML;
+			body = this.replace(body);
+			document.querySelector('body').innerHTML = body;
+		}
 	}, {
 		key: 'replace',
 		value: function replace(text) {
@@ -735,14 +744,14 @@ var Ghemojis = function () {
 		key: 'getEmojiImg',
 		value: function getEmojiImg(emoji) {
 			if (this.emojiLib[emoji]) {
-				return this.getEmojiCode(this.emojiLib[emoji]);
+				return this.getEmojiCode(this.emojiLib[emoji], emoji);
 			}
 			return null;
 		}
 	}, {
 		key: 'getEmojiCode',
-		value: function getEmojiCode(img) {
-			return '<img class=\'gh-emoji\' src="' + img + '" />';
+		value: function getEmojiCode(img, name) {
+			return '<img class=\'gh-emoji\' src="' + img + '" alt=":' + name + ':" />';
 		}
 	}]);
 
