@@ -82,6 +82,10 @@ var _repoCard = __webpack_require__(2);
 
 var _repoCard2 = _interopRequireDefault(_repoCard);
 
+var _ghemojis = __webpack_require__(6);
+
+var _ghemojis2 = _interopRequireDefault(_ghemojis);
+
 __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -93,6 +97,7 @@ var App = function () {
 		_classCallCheck(this, App);
 
 		this.api = new _apiWorker2.default();
+		this.emojis = new _ghemojis2.default();
 		this.cards = new _repoCard2.default(this);
 
 		this.state = {
@@ -368,6 +373,10 @@ var _templating = __webpack_require__(3);
 
 var _templating2 = _interopRequireDefault(_templating);
 
+var _ghemojis = __webpack_require__(6);
+
+var _ghemojis2 = _interopRequireDefault(_ghemojis);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -381,6 +390,7 @@ var RepoCard = function () {
 		this.template = new _templating2.default();
 		this.filters = [];
 		this.filterTemplate = new _templating2.default();
+		this.ghemojis = new _ghemojis2.default();
 	}
 
 	_createClass(RepoCard, [{
@@ -439,7 +449,7 @@ var RepoCard = function () {
 
 			var render = this.template.getTemplate();
 
-			render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: item.description || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: this.formatDate(item.created_at) }, { prop: 'updated_at', to: this.formatDate(item.updated_at) }, { prop: 'language', to: item.language || 'Sem Linguagem' }], render);
+			render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: this.ghemojis.replace(item.description) || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: this.formatDate(item.created_at) }, { prop: 'updated_at', to: this.formatDate(item.updated_at) }, { prop: 'language', to: item.language || 'Sem Linguagem' }], render);
 
 			render = this.fixImageSrc(render);
 
@@ -642,6 +652,104 @@ exports.default = Templating;
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 5 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _apiWorker = __webpack_require__(1);
+
+var _apiWorker2 = _interopRequireDefault(_apiWorker);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Ghemojis = function () {
+	function Ghemojis() {
+		_classCallCheck(this, Ghemojis);
+
+		this.api = new _apiWorker2.default();
+		this.cacheName = 'ghemojis';
+		this.emojiLib = this.getEmojiLib();
+	}
+
+	_createClass(Ghemojis, [{
+		key: 'getEmojiLib',
+		value: function getEmojiLib() {
+			return this.getFromLocal() || this.getFromApi();
+		}
+	}, {
+		key: 'getFromLocal',
+		value: function getFromLocal() {
+			console.log('getting from local');
+			try {
+				return JSON.parse(localStorage.getItem(this.cacheName));
+			} catch (e) {
+				return null;
+			}
+
+			return null;
+		}
+	}, {
+		key: 'getFromApi',
+		value: function getFromApi() {
+			console.log('getting from api');
+			return this.api.api('https://api.github.com').toRoute('emojis').whenDone(this.saveCache.bind(this)).throw(this.apiError.bind(this)).make();
+		}
+	}, {
+		key: 'saveCache',
+		value: function saveCache(data) {
+			this.emojiLib = JSON.parse(data);
+			localStorage.setItem(this.cacheName, data);
+		}
+	}, {
+		key: 'apiError',
+		value: function apiError() {}
+	}, {
+		key: 'replace',
+		value: function replace(text) {
+			var _this = this;
+
+			if (text == null) {
+				return null;
+			}
+
+			text = text.replace(new RegExp('\\:(.\\S*?)\\:', 'g'), function (match, contents, s, offset) {
+				return _this.getEmojiImg(contents);
+			});
+
+			return text;
+		}
+	}, {
+		key: 'getEmojiImg',
+		value: function getEmojiImg(emoji) {
+			if (this.emojiLib[emoji]) {
+				return this.getEmojiCode(this.emojiLib[emoji]);
+			}
+			return null;
+		}
+	}, {
+		key: 'getEmojiCode',
+		value: function getEmojiCode(img) {
+			return '<img class=\'gh-emoji\' src="' + img + '" />';
+		}
+	}]);
+
+	return Ghemojis;
+}();
+
+exports.default = Ghemojis;
 
 /***/ })
 /******/ ]);

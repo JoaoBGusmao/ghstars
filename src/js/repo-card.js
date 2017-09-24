@@ -1,4 +1,5 @@
 import Templating from './templating'
+import ghemojis from './ghemojis'
 
 class RepoCard {
 	constructor( app ) {
@@ -7,6 +8,7 @@ class RepoCard {
 		this.template = new Templating();
 		this.filters  = [];
 		this.filterTemplate = new Templating();
+		this.ghemojis = new ghemojis();
 	}
 
 	showCards() {
@@ -66,7 +68,7 @@ class RepoCard {
 			{ prop: 'name', to: item.name },
 			{ prop: 'html_url', to: item.html_url },
 			{ prop: 'stargazers_count', to: ( item.stargazers_count ).toLocaleString() },
-			{ prop: 'description', to: item.description || 'Sem descrição' },
+			{ prop: 'description', to: this.ghemojis.replace( item.description ) || 'Sem descrição' },
 			{ prop: 'owner.login', to: item.owner.login },
 			{ prop: 'open_issues_count', to: item.open_issues_count },
 			{ prop: 'created_at', to: this.formatDate( item.created_at ) },
