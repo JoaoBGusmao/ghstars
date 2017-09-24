@@ -13,7 +13,8 @@ class App {
 			loading: false,
 			filter: 'Todas as Linguagens',
 			ghuser: 'wilfernandesjr',
-			sort: 'sortStarsDescending'
+			sort: 'sortStarsDescending',
+			searching: false
 		};
 
 		this.reloadCards( true );
@@ -38,7 +39,7 @@ class App {
 	addEventListeners() {
 		document.querySelector( '.order-select' ).addEventListener( 'change', this.orderChanged.bind( this ) );
 		document.querySelector( '.filter-select' ).addEventListener( 'change', this.filterChanged.bind( this ) );
-		document.getElementById( 'change-ghuser' ).addEventListener( 'click', this.openGHUserChange.bind( this ) );
+		document.getElementById( 'change-ghuser' ).addEventListener( 'click', this.toggleGHUserChange.bind( this ) );
 		document.querySelector( '.ghuser-button' ).addEventListener( 'click', this.GHUserChange.bind( this ) );
 	}
 
@@ -61,9 +62,23 @@ class App {
 		this.reloadCards( false );
 	}
 
-	openGHUserChange( e ) {
-		e.preventDefault();
-		document.querySelector( '.new-ghuser' ).classList.add( 'active' );
+	toggleGHUserChange( e ) {
+		if( e )
+			e.preventDefault();
+		
+		var ghUserClasses = document.querySelector( '.new-ghuser' ).classList;
+		if( ghUserClasses.contains( 'active' ) ) {
+			this.setState({
+				...this.state,
+				searching: false,
+			});
+			return ghUserClasses.remove( 'active' );
+		}
+		this.setState({
+			...this.state,
+			searching: true,
+		});
+		return ghUserClasses.add( 'active' );
 	}
 
 	GHUserChange() {
@@ -97,6 +112,9 @@ class App {
 			this.cards.setData( data );
 		}
 		this.cards.showCards()
+		if( this.state.searching ) {
+			this.toggleGHUserChange(null);
+		}
 	}
 
 	apiError( status ) {

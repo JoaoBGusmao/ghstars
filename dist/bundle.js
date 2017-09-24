@@ -103,7 +103,8 @@ var App = function () {
 			loading: false,
 			filter: 'Todas as Linguagens',
 			ghuser: 'wilfernandesjr',
-			sort: 'sortStarsDescending'
+			sort: 'sortStarsDescending',
+			searching: false
 		};
 
 		this.reloadCards(true);
@@ -132,7 +133,7 @@ var App = function () {
 		value: function addEventListeners() {
 			document.querySelector('.order-select').addEventListener('change', this.orderChanged.bind(this));
 			document.querySelector('.filter-select').addEventListener('change', this.filterChanged.bind(this));
-			document.getElementById('change-ghuser').addEventListener('click', this.openGHUserChange.bind(this));
+			document.getElementById('change-ghuser').addEventListener('click', this.toggleGHUserChange.bind(this));
 			document.querySelector('.ghuser-button').addEventListener('click', this.GHUserChange.bind(this));
 		}
 	}, {
@@ -155,10 +156,21 @@ var App = function () {
 			this.reloadCards(false);
 		}
 	}, {
-		key: 'openGHUserChange',
-		value: function openGHUserChange(e) {
-			e.preventDefault();
-			document.querySelector('.new-ghuser').classList.add('active');
+		key: 'toggleGHUserChange',
+		value: function toggleGHUserChange(e) {
+			if (e) e.preventDefault();
+
+			var ghUserClasses = document.querySelector('.new-ghuser').classList;
+			if (ghUserClasses.contains('active')) {
+				this.setState(_extends({}, this.state, {
+					searching: false
+				}));
+				return ghUserClasses.remove('active');
+			}
+			this.setState(_extends({}, this.state, {
+				searching: true
+			}));
+			return ghUserClasses.add('active');
 		}
 	}, {
 		key: 'GHUserChange',
@@ -190,6 +202,9 @@ var App = function () {
 				this.cards.setData(data);
 			}
 			this.cards.showCards();
+			if (this.state.searching) {
+				this.toggleGHUserChange(null);
+			}
 		}
 	}, {
 		key: 'apiError',
@@ -420,17 +435,20 @@ var RepoCard = function () {
 		value: function sortCards(a, b) {
 			var sort = this.app.state.sort;
 
-			if (sort == 'sortName') return this.sortName(a, b);
-
-			if (sort == 'sortStarsDescending') return this.sortStarsDescending(a, b);
-
-			if (sort == 'sortStarsAscending') return this.sortStarsAscending(a, b);
-
-			if (sort == 'sortIssuesDescending') return this.sortIssuesDescending(a, b);
-
-			if (sort == 'sortIssuesAscending') return this.sortIssuesAscending(a, b);
-
-			return this.sortStarsDescending(a, b);
+			switch (sort) {
+				case 'sortName':
+					return this.sortName(a, b);
+				case 'sortStarsDescending':
+					return this.sortStarsDescending(a, b);
+				case 'sortStarsAscending':
+					return this.sortStarsAscending(a, b);
+				case 'sortIssuesDescending':
+					return this.sortIssuesDescending(a, b);
+				case 'sortIssuesAscending':
+					return this.sortIssuesAscending(a, b);
+				default:
+					return this.sortStarsDescending(a, b);
+			}
 		}
 	}, {
 		key: 'validateFilter',
