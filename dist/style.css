@@ -103,14 +103,18 @@ input[type="text"] {
   padding: 7px 12px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   font-size: 13px;
-  border-radius: 5px; }
+  border-radius: 5px;
+  -moz-appearance: none;
+  -webkit-appearance: none; }
 
 input[type="button"] {
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.05);
   font-size: 13px;
   padding: 7px 12px;
-  border-radius: 5px; }
+  border-radius: 5px;
+  -moz-appearance: none;
+  -webkit-appearance: none; }
 
 header.header .test p {
   color: white;

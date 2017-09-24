@@ -126,6 +126,8 @@ input[type="text"] {
 	border: 1px solid $lightBorder;
 	font-size: 13px;
 	border-radius: 5px;
+	-moz-appearance: none;
+	-webkit-appearance: none;
 }
 
 input[type="button"] {
@@ -134,4 +136,6 @@ input[type="button"] {
 	font-size: 13px;
 	padding: 7px 12px;
 	border-radius: 5px;
+	-moz-appearance: none;
+	-webkit-appearance: none;
 }
