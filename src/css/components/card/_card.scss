@@ -12,13 +12,14 @@
 	}
 
 	.header {
+		align-items: center;
 		border-top: 2px solid $border;
 		border-bottom: 1px solid $lightBorder;
 		display: flex;
 		color: white;
 		font-weight: bold;
 		justify-content: space-between;
-		padding: 15px;
+		padding: 10px 15px;
 		position: relative;
 
 		a {
@@ -31,7 +32,6 @@
 
 		.star {
 			float: right;
-			margin-top: -4px;
 			position: relative;
 			width: 30px;
 

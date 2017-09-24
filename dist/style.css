@@ -180,13 +180,14 @@ header.header .container {
   .card-repo.active {
     display: block; }
   .card-repo .header {
+    align-items: center;
     border-top: 2px solid rgba(0, 0, 0, 0.4);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
     color: white;
     font-weight: bold;
     justify-content: space-between;
-    padding: 15px;
+    padding: 10px 15px;
     position: relative; }
     .card-repo .header a {
       color: #444;
@@ -196,7 +197,6 @@ header.header .container {
       word-break: break-word; }
     .card-repo .header .star {
       float: right;
-      margin-top: -4px;
       position: relative;
       width: 30px; }
       .card-repo .header .star span {
