@@ -178,8 +178,10 @@ header.header .container {
   .card-repo .header {
     border-top: 2px solid rgba(0, 0, 0, 0.4);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
     color: white;
     font-weight: bold;
+    justify-content: space-between;
     padding: 15px;
     position: relative; }
     .card-repo .header a {
@@ -201,8 +203,6 @@ header.header .container {
         font-size: 14px;
         color: #9a9a9a; }
       .card-repo .header .star svg {
-        width: 100%;
-        height: auto;
         fill: #ffc200; }
   .card-repo .content {
     padding: 15px; }
@@ -246,7 +246,8 @@ header.header .container {
   width: 100%;
   margin-bottom: 20px;
   font-size: 13px;
-  -webkit-appearance: none; }
+  -webkit-appearance: none;
+  -moz-appearance: none; }
 
 @media screen and (min-width: 768px) {
   .filters {

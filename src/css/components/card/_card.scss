@@ -14,8 +14,10 @@
 	.header {
 		border-top: 2px solid $border;
 		border-bottom: 1px solid $lightBorder;
+		display: flex;
 		color: white;
 		font-weight: bold;
+		justify-content: space-between;
 		padding: 15px;
 		position: relative;
 
@@ -43,8 +45,6 @@
 			}
 
 			svg {
-				width: 100%;
-				height: auto;
 				fill: $yellow;
 			}
 		}
