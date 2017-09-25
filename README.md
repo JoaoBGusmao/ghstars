@@ -23,7 +23,7 @@ O projeto não tem dependências para produção. Todas as dependências são de
 
 Para compilar js e css, usei o webpack, e já que usei as specs da es6, foi necessário alguns plugins do 'babel' para fazer a tradução do código para que o mesmo funcione nos interpretadores de js dos navegadores.
 
-# Rodar no Localhost
+# Rodando no Localhost
 A aplicação roda independente de um servidor específico, como node, nginx, apache... Portanto, basta clonar o projeto e acessar o arquivo index.html
 ``git@github.com:JoaoBGusmao/ghstars.git``
 

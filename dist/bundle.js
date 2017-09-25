@@ -158,12 +158,14 @@ var App = function () {
 	}, {
 		key: 'filterChanged',
 		value: function filterChanged(e) {
-			this.setState(_extends({}, this.state, {
-				filter: e.target.value
-			}));
-
-			this.cards.validateFilter();
-			this.reloadCards(false);
+			var filter = e.target.value;
+			if (this.cards.validateFilter(filter)) {
+				this.setState(_extends({}, this.state, {
+					filter: filter
+				}));
+				return this.reloadCards(false);
+			}
+			console.error('Você forneceu um filtro inválido!');
 		}
 	}, {
 		key: 'toggleGHUserChange',
@@ -451,7 +453,7 @@ var RepoCard = function () {
 			this.loadLanguagesFilter(ghStars);
 
 			ghStars.sort(function (a, b) {
-				return _this.sortCards(a, b);
+				return _this.sortCards(a, b, _this.app.state.sort);
 			});
 
 			ghStars.map(function (item, index) {
@@ -462,9 +464,7 @@ var RepoCard = function () {
 		}
 	}, {
 		key: 'sortCards',
-		value: function sortCards(a, b) {
-			var sort = this.app.state.sort;
-
+		value: function sortCards(a, b, sort) {
 			switch (sort) {
 				case 'sortName':
 					if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
@@ -483,10 +483,11 @@ var RepoCard = function () {
 		}
 	}, {
 		key: 'validateFilter',
-		value: function validateFilter() {
-			if (this.filters.indexOf(this.app.state.filter) == -1) {
-				this.app.state.filter = '';
+		value: function validateFilter(filter) {
+			if (this.filters.indexOf(filter) != -1) {
+				return true;
 			}
+			return false;
 		}
 	}, {
 		key: 'renderCard',
@@ -496,12 +497,18 @@ var RepoCard = function () {
 			}
 
 			var render = this.template.getTemplate();
+			var output = this.modifyCardToRender(render, item);
 
-			render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: this.ghemojis.replace(item.description) || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: this.formatDate(item.created_at) }, { prop: 'updated_at', to: this.formatDate(item.updated_at) }, { prop: 'language', to: item.language || 'Sem Linguagem' }], render);
+			this.template.appendHTML(output);
+		}
+	}, {
+		key: 'modifyCardToRender',
+		value: function modifyCardToRender(render, item) {
+			var render = this.template.variablesReplace([{ prop: 'name', to: item.name }, { prop: 'html_url', to: item.html_url }, { prop: 'stargazers_count', to: item.stargazers_count.toLocaleString() }, { prop: 'description', to: this.ghemojis.replace(item.description) || 'Sem descrição' }, { prop: 'owner.login', to: item.owner.login }, { prop: 'open_issues_count', to: item.open_issues_count }, { prop: 'created_at', to: this.formatDate(item.created_at) }, { prop: 'updated_at', to: this.formatDate(item.updated_at) }, { prop: 'language', to: item.language || 'Sem Linguagem' }], render);
 
 			render = this.fixImageSrc(render);
 
-			this.template.appendHTML(render);
+			return render;
 		}
 	}, {
 		key: 'fitInFilter',

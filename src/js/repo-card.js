@@ -24,7 +24,7 @@ class RepoCard {
 
 		this.loadLanguagesFilter( ghStars );
 
-		ghStars.sort( ( a, b ) => this.sortCards( a, b ) );
+		ghStars.sort( ( a, b ) => this.sortCards( a, b, this.app.state.sort ) );
 
 		ghStars.map( ( item, index ) => {
 			if( this.fitInFilter( item ) )
@@ -34,9 +34,7 @@ class RepoCard {
 		this.app.stopLoading();
 	}
 
-	sortCards( a, b ) {
-		var sort = this.app.state.sort;
-		
+	sortCards( a, b, sort ) {
 		switch( sort ) {
 			case 'sortName':
 				if( a.name.toLowerCase() < b.name.toLowerCase() ) return -1;
@@ -54,10 +52,11 @@ class RepoCard {
 		}
 	}
 
-	validateFilter() {
-		if( this.filters.indexOf( this.app.state.filter ) == -1 ) {
-			this.app.state.filter = '';
+	validateFilter( filter ) {
+		if( this.filters.indexOf( filter ) != -1 ) {
+			return true;
 		}
+		return false;
 	}
 
 	renderCard( item ) {
@@ -66,8 +65,13 @@ class RepoCard {
 		}
 
 		var render = this.template.getTemplate();
-		
-		render = this.template.variablesReplace( [
+		var output = this.modifyCardToRender( render, item );
+
+		this.template.appendHTML( output );
+	}
+
+	modifyCardToRender( render, item ) {
+		var render = this.template.variablesReplace( [
 			{ prop: 'name', to: item.name },
 			{ prop: 'html_url', to: item.html_url },
 			{ prop: 'stargazers_count', to: ( item.stargazers_count ).toLocaleString() },
@@ -81,7 +85,7 @@ class RepoCard {
 
 		render = this.fixImageSrc( render );
 
-		this.template.appendHTML( render );
+		return render;
 	}
 
 	fitInFilter( item ) {

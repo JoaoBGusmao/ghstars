@@ -62,13 +62,15 @@ class App {
 	}
 
 	filterChanged( e ) {
-		this.setState({
-			...this.state,
-			filter: e.target.value
-		});
-
-		this.cards.validateFilter();
-		this.reloadCards( false );
+		var filter = e.target.value
+		if( this.cards.validateFilter( filter ) ) {
+			this.setState({
+				...this.state,
+				filter: filter
+			});
+			return this.reloadCards( false );
+		}
+		console.error( 'Você forneceu um filtro inválido!' );
 	}
 
 	toggleGHUserChange( e ) {
