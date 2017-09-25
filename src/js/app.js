@@ -9,16 +9,26 @@ class App {
 		this.api    = new apiWorker();
 		this.cards  = new RepoCard( this );
 
+		var ghuser = this.getUserFromUrl();
+
+		if( ! ghuser ) {
+			ghuser = 'wilfernandesjr';
+		}
+
 		this.state = {
 			loading: false,
 			filter: 'Todas as Linguagens',
-			ghuser: 'wilfernandesjr',
+			ghuser: ghuser,
 			sort: 'sortStarsDescending',
 			searching: false
 		};
 
 		this.reloadCards( true );
 		this.addEventListeners();
+	}
+
+	getUserFromUrl() {
+		return this.get('ghuser');
 	}
 
 	reloadCards( callApiAgain ) {
@@ -170,6 +180,11 @@ class App {
 		errorWrapper.classList.remove( 'active' );
 		errorWrapper.innerHTML = '';
 		document.querySelector( '.main-content' ).classList.remove( 'has-error' );
+	}
+
+	get( name ){
+		if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+		return decodeURIComponent(name[1]);
 	}
 }
 

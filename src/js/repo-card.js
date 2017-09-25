@@ -18,6 +18,12 @@ class RepoCard {
 
 		var ghStars = JSON.parse( this.data );
 
+		if( ghStars.length == 0 ) {
+			this.app.showError( 'Nenhum repositório com star encontrado para o usuário' );
+			this.app.stopLoading();
+			return null;
+		}
+
 		this.loadLanguagesFilter( ghStars );
 
 		ghStars.sort( ( a, b ) => this.sortCards( a, b ) );

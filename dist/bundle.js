@@ -99,10 +99,16 @@ var App = function () {
 		this.api = new _apiWorker2.default();
 		this.cards = new _repoCard2.default(this);
 
+		var ghuser = this.getUserFromUrl();
+
+		if (!ghuser) {
+			ghuser = 'wilfernandesjr';
+		}
+
 		this.state = {
 			loading: false,
 			filter: 'Todas as Linguagens',
-			ghuser: 'wilfernandesjr',
+			ghuser: ghuser,
 			sort: 'sortStarsDescending',
 			searching: false
 		};
@@ -112,6 +118,11 @@ var App = function () {
 	}
 
 	_createClass(App, [{
+		key: 'getUserFromUrl',
+		value: function getUserFromUrl() {
+			return this.get('ghuser');
+		}
+	}, {
 		key: 'reloadCards',
 		value: function reloadCards(callApiAgain) {
 			if (callApiAgain) {
@@ -264,6 +275,11 @@ var App = function () {
 			errorWrapper.classList.remove('active');
 			errorWrapper.innerHTML = '';
 			document.querySelector('.main-content').classList.remove('has-error');
+		}
+	}, {
+		key: 'get',
+		value: function get(name) {
+			if (name = new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)').exec(location.search)) return decodeURIComponent(name[1]);
 		}
 	}]);
 
@@ -424,6 +440,12 @@ var RepoCard = function () {
 			}
 
 			var ghStars = JSON.parse(this.data);
+
+			if (ghStars.length == 0) {
+				this.app.showError('Nenhum repositório com star encontrado para o usuário');
+				this.app.stopLoading();
+				return null;
+			}
 
 			this.loadLanguagesFilter(ghStars);
 
