@@ -6,6 +6,15 @@ O projeto está disponível na URL:
 
 https://joaobgusmao.github.io/ghstars
 
+O GHStars foi desenvolvido com o objetivo de listar os repositórios que quaisquer usuários, válidos e ativos, do github possam ter dado star. ​
+
+​Através da API Starred ​e utilizando uma chamada ajax, foi possível liberar o carregamento imediato da página, enquanto ainda são feitas as requisição à API. 
+
+Além disso, houve uma tratativa especial a eventuais erros, como usuário inválido ou indisponibilidade na API, por exemplo. Potencializando o desempenho da página e evitando que a aplicação quebre caso estas situações ocorram.
+
+Para não ficar preso ao escopo inicial que era trazer os repositórios de um usuário específico, ​foi concedida a possibilidade de alterar de duas formas diferentes: ​
+A primeira seria através do botão "Alterar Usuário" ​localizado na parte superior da página​​, já a segunda seria passando um parâmetro especial na URL (tem um exemplo de uso em 'Dependências' )
+
 # Dependências
 O projeto não tem dependências para produção. Todas as dependências são de desenvolvimento. A lista pode ser vista aqui:
 
@@ -22,6 +31,9 @@ O projeto não tem dependências para produção. Todas as dependências são de
 ...ou aqui: https://joaobgusmao.github.io/ghstars?ghuser=joaobgusmao
 
 Para compilar js e css, usei o webpack, e já que usei as specs da es6, foi necessário alguns plugins do 'babel' para fazer a tradução do código para que o mesmo funcione nos interpretadores de js dos navegadores.
+
+# Motivação de uso
+Tratando-se de uma aplicação voltada a navegadores, o JavaScript com certeza se sobressai e, ao meu ver é a melhor linguagem para programação no front-end. Para melhorar ainda mais o código, fiz o uso das specs da es6. Assim, pude trazer para o projeto a possibilidade de trabalhar com classes, deixando o código mais perto de uma linguagem de back-end. Isso me permitiu construir um código mais legível e bem definido.
 
 # Rodando no Localhost
 A aplicação roda independente de um servidor específico, como node, nginx, apache... Portanto, basta clonar o projeto e acessar o arquivo index.html
