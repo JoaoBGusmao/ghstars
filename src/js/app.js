@@ -107,6 +107,9 @@ class App {
 			filter: 'Todas as Linguagens'
 		});
 
+		var pageUrl = `?ghuser=${newGhUser}`;
+		window.history.pushState('', '', pageUrl);
+
 		this.cards.clearCards();
 
 		return this.reloadCards( true );

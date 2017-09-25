@@ -200,6 +200,9 @@ var App = function () {
 				filter: 'Todas as Linguagens'
 			}));
 
+			var pageUrl = '?ghuser=' + newGhUser;
+			window.history.pushState('', '', pageUrl);
+
 			this.cards.clearCards();
 
 			return this.reloadCards(true);
@@ -443,8 +446,6 @@ var RepoCard = function () {
 
 			if (ghStars.length == 0) {
 				this.app.showError('Nenhum repositório com star encontrado para o usuário');
-				this.app.stopLoading();
-				return null;
 			}
 
 			this.loadLanguagesFilter(ghStars);
@@ -564,7 +565,9 @@ var RepoCard = function () {
 		key: 'clearCards',
 		value: function clearCards() {
 			this.setData(null);
-			this.filterTemplate.wrapper.innerHTML = '';
+			if (this.filterTemplate.wrapper) {
+				this.filterTemplate.wrapper.innerHTML = '';
+			}
 			this.filters = [];
 		}
 	}, {

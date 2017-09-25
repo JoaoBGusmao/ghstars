@@ -20,8 +20,6 @@ class RepoCard {
 
 		if( ghStars.length == 0 ) {
 			this.app.showError( 'Nenhum repositório com star encontrado para o usuário' );
-			this.app.stopLoading();
-			return null;
 		}
 
 		this.loadLanguagesFilter( ghStars );
@@ -142,7 +140,9 @@ class RepoCard {
 
 	clearCards() {
 		this.setData( null );
-		this.filterTemplate.wrapper.innerHTML = '';
+		if( this.filterTemplate.wrapper ) {
+			this.filterTemplate.wrapper.innerHTML = '';
+		}
 		this.filters = [];
 	}
 
