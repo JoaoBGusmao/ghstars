@@ -4,7 +4,7 @@ Aplicação que mostra os repositórios em que o usuário deu estrela
 # Projeto
 O projeto está disponível na URL:
 
-``https://joaobgusmao.github.io/ghstars``
+https://joaobgusmao.github.io/ghstars
 
 # Dependências
 O projeto não tem dependências para produção. Todas as dependências são de desenvolvimento. A lista pode ser vista aqui:
@@ -28,14 +28,17 @@ A aplicação roda independente de um servidor específico, como node, nginx, ap
 ``git@github.com:JoaoBGusmao/ghstars.git``
 
 # Instalando as dependências
-``git@github.com:JoaoBGusmao/ghstars.git
-cd ghstars
-npm i
-``
+``git@github.com:JoaoBGusmao/ghstars.git``
+
+``cd ghstars``
+
+``npm i``
 
 # Fazendo edições
 Requer nodejs! As alterações no código CSS e JavaScript do projeto precisam ser compiladas. Para isso, utilizo o webpack.
+
 ``webpack --watch``
+
 O comando acima fará com que o webpack (anteriormente instalado com npm) fique 'escutando' as alterações nos arquivos. Assim que qualquer alteração for feita, o webpack vai compilar novamente o projeto e exportar as saídas para ./dist
 
 # O Código
