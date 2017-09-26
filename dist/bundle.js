@@ -752,21 +752,22 @@ var Ghemojis = function () {
 	}, {
 		key: 'replaceBody',
 		value: function replaceBody() {
-			var body = document.querySelector('body').innerHTML;
-			body = this.replace(body);
-			document.querySelector('body').innerHTML = body;
+			var pageBody = document.body.innerHTML;
+			var replaced = this.replace(pageBody);
+			document.body.innerHTML = replaced;
 		}
 	}, {
 		key: 'replace',
 		value: function replace(text) {
 			var _this = this;
 
-			if (text == null) {
-				return null;
+			if (text == null || !this.isEmojiLibAvailable()) {
+				return text;
 			}
 
 			text = text.replace(new RegExp('\\:(.\\S*?)\\:', 'g'), function (match, contents, s, offset) {
-				return _this.getEmojiImg(contents);
+				var img = _this.getEmojiImg(contents);
+				return img ? img : match;
 			});
 
 			return text;
@@ -774,10 +775,16 @@ var Ghemojis = function () {
 	}, {
 		key: 'getEmojiImg',
 		value: function getEmojiImg(emoji) {
-			if (this.emojiLib[emoji]) {
+			if (this.emojiLib[emoji] != null) {
 				return this.getEmojiCode(this.emojiLib[emoji], emoji);
 			}
-			return null;
+
+			return false;
+		}
+	}, {
+		key: 'isEmojiLibAvailable',
+		value: function isEmojiLibAvailable() {
+			return this.emojiLib != null;
 		}
 	}, {
 		key: 'getEmojiCode',

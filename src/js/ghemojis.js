@@ -42,28 +42,34 @@ class Ghemojis {
 	}
 
 	replaceBody() {
-		var body = document.querySelector( 'body' ).innerHTML;
-		body = this.replace( body );
-		document.querySelector( 'body' ).innerHTML = body;
+		var pageBody = document.body.innerHTML;
+		var replaced = this.replace( pageBody );
+		document.body.innerHTML = replaced;
 	}
 
 	replace( text ) {
-		if( text == null ) {
-			return null;
+		if( text == null || ! this.isEmojiLibAvailable() ) {
+			return text;
 		}
 
 		text = text.replace( new RegExp( '\\:(.\\S*?)\\:', 'g' ), (match, contents, s, offset) => {
-			return this.getEmojiImg( contents );
+			var img = this.getEmojiImg( contents );
+			return img ? img : match;
 		});
 
 		return text;
 	}
 
 	getEmojiImg( emoji ) {
-		if( this.emojiLib[ emoji ] ) {
+		if( this.emojiLib[ emoji ] != null ) {
 			return this.getEmojiCode( this.emojiLib[ emoji ], emoji );
 		}
-		return null;
+
+		return false;
+	}
+
+	isEmojiLibAvailable() {
+		return this.emojiLib != null;
 	}
 
 	getEmojiCode( img, name ) {
